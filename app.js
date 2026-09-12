@@ -14,6 +14,33 @@
   let state = loadState();
   let timerId = null;
   let installPrompt = null;
+  let audioContext = null;
+
+  function prepareAudio() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    if (!audioContext) audioContext = new AudioContext();
+    if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+  }
+
+  function playRoundEndSignal() {
+    prepareAudio();
+    if (!audioContext || audioContext.state !== 'running') return;
+    const start = audioContext.currentTime;
+    [0, 0.24, 0.48].forEach((delay, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.value = index === 2 ? 880 : 660;
+      gain.gain.setValueAtTime(0.0001, start + delay);
+      gain.gain.exponentialRampToValueAtTime(0.28, start + delay + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + delay + 0.18);
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start(start + delay);
+      oscillator.stop(start + delay + 0.2);
+    });
+  }
 
   function loadState() {
     try {
@@ -129,6 +156,7 @@
   function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
   function startGame() {
+    prepareAudio();
     state.players.forEach((player, index) => { player.name = player.name.trim() || `Игрок ${index + 1}`; player.rebuys = 0; player.cashout = state.setup.stack; });
     state.game = { round: 1, remaining: state.setup.roundsEnabled ? state.setup.minutes * 60 : 0, running: state.setup.roundsEnabled, endAt: state.setup.roundsEnabled ? Date.now() + state.setup.minutes * 60000 : null, finished: false };
     saveState(); renderGame(); showScreen('game'); startTimerLoop();
@@ -136,11 +164,14 @@
   function syncTimer() {
     if (!state.game.running || !state.setup.roundsEnabled || !state.game.endAt) return;
     const duration = state.setup.minutes * 60000;
+    let roundEnded = false;
     while (Date.now() >= state.game.endAt && !state.game.finished) {
+      roundEnded = true;
       if (state.game.round < state.setup.rounds) { state.game.round++; state.game.endAt += duration; }
-      else { state.game.finished = true; state.game.running = false; state.game.remaining = 0; state.game.endAt = null; saveState(); return; }
+      else { state.game.finished = true; state.game.running = false; state.game.remaining = 0; state.game.endAt = null; saveState(); break; }
     }
-    state.game.remaining = Math.max(0, Math.ceil((state.game.endAt - Date.now()) / 1000));
+    if (roundEnded) playRoundEndSignal();
+    if (state.game.endAt) state.game.remaining = Math.max(0, Math.ceil((state.game.endAt - Date.now()) / 1000));
   }
   function startTimerLoop() {
     clearInterval(timerId); syncTimer(); renderGame();
@@ -168,6 +199,7 @@
     $('rebuy-note').textContent = s.rebuyEnabled ? (rebuyAllowed ? `Ребаи доступны до конца раунда ${s.rebuyRound}.` : 'Дедлайн ребаев прошёл.') : 'Ребаи доступны всю игру.';
   }
   function togglePause() {
+    prepareAudio();
     syncTimer();
     if (state.game.running) { state.game.running = false; state.game.endAt = null; clearInterval(timerId); }
     else { state.game.running = true; state.game.endAt = Date.now() + state.game.remaining * 1000; startTimerLoop(); }
