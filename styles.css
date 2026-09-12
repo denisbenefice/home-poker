@@ -74,6 +74,22 @@ summary { min-height: 32px; font-weight: 700; cursor: pointer; }
 .blind-panel span { display: block; color: var(--muted); font-size: 13px; }
 .blind-panel strong { display: block; margin-top: 4px; font-size: 30px; }
 .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.music-panel { margin-top: 20px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.music-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.music-heading h2 { margin: 0 0 3px; }
+.music-heading .hint { margin: 0; }
+.music-track-name { display: block; margin: 14px 0 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-controls { display: grid; grid-template-columns: 42px 48px 42px 1fr; gap: 8px; align-items: center; }
+.music-button { width: 42px; height: 42px; border: 1px solid var(--border); border-radius: 50%; color: var(--text); background: var(--surface-muted); font-size: 22px; line-height: 1; }
+.music-play { width: 48px; height: 48px; color: var(--accent-text); background: var(--accent); }
+.volume-control { display: flex; flex-direction: column; gap: 3px; color: var(--muted); font-size: 11px; }
+.volume-control input { min-height: 28px; padding: 0; accent-color: var(--accent); }
+.music-library { max-height: 150px; margin-top: 10px; overflow-y: auto; border-top: 1px solid var(--border); }
+.music-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.music-row button { min-width: 0; border: 0; background: transparent; }
+.music-select { overflow: hidden; color: var(--text); text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.music-row.active .music-select { font-weight: 750; }
+.music-remove { color: var(--danger); font-size: 18px; }
 .roster-row, .cashout-row, .transfer-row { display: grid; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .roster-row { grid-template-columns: 1fr auto; }
 .roster-row small, .cashout-row small { display: block; margin-top: 3px; color: var(--muted); }
@@ -99,6 +115,8 @@ footer { display: flex; align-items: center; justify-content: center; gap: 8px; 
   .chip-row { grid-template-columns: 1fr 1fr 42px; }
   .transfer-row { grid-template-columns: 1fr auto 1fr; }
   .transfer-row .amount { grid-column: 1 / -1; }
+  .music-controls { grid-template-columns: 42px 48px 42px; }
+  .volume-control { grid-column: 1 / -1; }
 }
 @media (min-width: 681px) {
   body { padding-block: 24px; }

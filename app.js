@@ -15,6 +15,106 @@
   let timerId = null;
   let installPrompt = null;
   let audioContext = null;
+  let musicTracks = [];
+  let currentTrackIndex = 0;
+  let currentTrackUrl = null;
+  const musicAudio = new Audio();
+  musicAudio.preload = 'metadata';
+  musicAudio.volume = 0.55;
+
+  function openMusicDb() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('home-poker-music-v1', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('tracks', { keyPath: 'id' });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function musicStore(mode, operation) {
+    const db = await openMusicDb();
+    try {
+      return await new Promise((resolve, reject) => {
+        const transaction = db.transaction('tracks', mode);
+        const request = operation(transaction.objectStore('tracks'));
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    } finally { db.close(); }
+  }
+
+  async function loadMusicLibrary() {
+    try {
+      musicTracks = (await musicStore('readonly', store => store.getAll())).sort((a, b) => a.addedAt - b.addedAt);
+      currentTrackIndex = Math.min(currentTrackIndex, Math.max(0, musicTracks.length - 1));
+      renderMusicPlayer();
+    } catch (_) { $('music-status').textContent = 'Не удалось открыть хранилище музыки.'; }
+  }
+
+  function setMusicTrack(index, autoplay = false) {
+    if (!musicTracks.length) return;
+    currentTrackIndex = (index + musicTracks.length) % musicTracks.length;
+    if (currentTrackUrl) URL.revokeObjectURL(currentTrackUrl);
+    currentTrackUrl = URL.createObjectURL(musicTracks[currentTrackIndex].blob);
+    musicAudio.src = currentTrackUrl;
+    updateMediaSession();
+    renderMusicPlayer();
+    if (autoplay) musicAudio.play().catch(() => {});
+  }
+
+  function toggleMusic() {
+    if (!musicTracks.length) { $('music-files').click(); return; }
+    if (!musicAudio.src) setMusicTrack(currentTrackIndex);
+    if (musicAudio.paused) musicAudio.play().catch(() => {}); else musicAudio.pause();
+  }
+
+  function changeMusicTrack(direction) {
+    if (!musicTracks.length) return;
+    const wasPlaying = !musicAudio.paused;
+    setMusicTrack(currentTrackIndex + direction, wasPlaying);
+  }
+
+  function updateMediaSession() {
+    if (!('mediaSession' in navigator) || !musicTracks.length || !('MediaMetadata' in window)) return;
+    navigator.mediaSession.metadata = new MediaMetadata({ title: musicTracks[currentTrackIndex].name, artist: 'Домашний покер' });
+  }
+
+  function renderMusicPlayer() {
+    const hasTracks = musicTracks.length > 0;
+    $('music-player').hidden = !hasTracks;
+    $('music-status').textContent = hasTracks ? `${musicTracks.length} ${musicTracks.length === 1 ? 'трек сохранён' : 'треков сохранено'} офлайн` : 'Добавьте MP3 или M4A — треки сохранятся на телефоне.';
+    if (!hasTracks) return;
+    $('music-track-name').textContent = musicTracks[currentTrackIndex].name;
+    $('music-toggle').textContent = musicAudio.paused ? '▶' : '❚❚';
+    $('music-toggle').setAttribute('aria-label', musicAudio.paused ? 'Воспроизвести' : 'Пауза');
+    $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row ${index === currentTrackIndex ? 'active' : ''}"><button class="music-select" type="button" data-index="${index}">${escapeHtml(track.name)}</button><button class="music-remove" type="button" data-remove="${track.id}" aria-label="Удалить трек">×</button></div>`).join('');
+    document.querySelectorAll('.music-select').forEach(button => button.addEventListener('click', () => setMusicTrack(Number(button.dataset.index), true)));
+    document.querySelectorAll('.music-remove').forEach(button => button.addEventListener('click', () => removeMusicTrack(button.dataset.remove)));
+  }
+
+  async function importMusic(files) {
+    const audioFiles = [...files].filter(file => file.type.startsWith('audio/') || /\.(mp3|m4a)$/i.test(file.name));
+    if (!audioFiles.length) return;
+    $('music-status').textContent = 'Сохраняем музыку…';
+    try {
+      for (const file of audioFiles) {
+        const track = { id: `${Date.now()}-${crypto.randomUUID ? crypto.randomUUID() : Math.random()}`, name: file.name.replace(/\.[^.]+$/, ''), type: file.type, blob: file, addedAt: Date.now() };
+        await musicStore('readwrite', store => store.put(track));
+      }
+      await loadMusicLibrary();
+      if (!musicAudio.src) setMusicTrack(0);
+    } catch (_) { $('music-status').textContent = 'Не удалось сохранить треки. Проверьте свободное место.'; }
+    $('music-files').value = '';
+  }
+
+  async function removeMusicTrack(id) {
+    const removingCurrent = musicTracks[currentTrackIndex]?.id === id;
+    await musicStore('readwrite', store => store.delete(id));
+    musicTracks = musicTracks.filter(track => track.id !== id);
+    if (removingCurrent) { musicAudio.pause(); musicAudio.removeAttribute('src'); if (currentTrackUrl) URL.revokeObjectURL(currentTrackUrl); currentTrackUrl = null; }
+    currentTrackIndex = Math.min(currentTrackIndex, Math.max(0, musicTracks.length - 1));
+    if (removingCurrent && musicTracks.length) setMusicTrack(currentTrackIndex); else renderMusicPlayer();
+  }
 
   function prepareAudio() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -26,6 +126,8 @@
   function playRoundEndSignal() {
     prepareAudio();
     if (!audioContext || audioContext.state !== 'running') return;
+    const musicVolume = !musicAudio.paused ? musicAudio.volume : null;
+    if (musicVolume !== null) musicAudio.volume = Math.min(musicVolume, 0.15);
     const start = audioContext.currentTime;
     [0, 0.24, 0.48].forEach((delay, index) => {
       const oscillator = audioContext.createOscillator();
@@ -40,6 +142,7 @@
       oscillator.start(start + delay);
       oscillator.stop(start + delay + 0.2);
     });
+    if (musicVolume !== null) setTimeout(() => { musicAudio.volume = musicVolume; }, 850);
   }
 
   function loadState() {
@@ -157,6 +260,10 @@
 
   function startGame() {
     prepareAudio();
+    if (musicTracks.length) {
+      if (!musicAudio.src) setMusicTrack(currentTrackIndex);
+      musicAudio.play().catch(() => {});
+    }
     state.players.forEach((player, index) => { player.name = player.name.trim() || `Игрок ${index + 1}`; player.rebuys = 0; player.cashout = state.setup.stack; });
     state.game = { round: 1, remaining: state.setup.roundsEnabled ? state.setup.minutes * 60 : 0, running: state.setup.roundsEnabled, endAt: state.setup.roundsEnabled ? Date.now() + state.setup.minutes * 60000 : null, finished: false };
     saveState(); renderGame(); showScreen('game'); startTimerLoop();
@@ -207,6 +314,7 @@
   }
 
   function openCashout() {
+    musicAudio.pause();
     syncTimer(); state.game.running = false; state.game.endAt = null; clearInterval(timerId); saveState();
     const issued = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.stack, 0);
     const pot = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.buyIn, 0);
@@ -236,6 +344,7 @@
     $('transfers').innerHTML = state.transfers.length ? state.transfers.map(transfer => `<div class="transfer-row"><strong>${escapeHtml(transfer.from)}</strong><span class="arrow">→</span><strong>${escapeHtml(transfer.to)}</strong><span class="amount">${money(transfer.amount)}</span></div>`).join('') : '<div class="empty-result">Все игроки вышли в ноль — переводов нет.</div>';
   }
   function newGame() {
+    musicAudio.pause();
     state.screen = 'setup'; state.players = []; state.game = structuredClone(defaults.game); state.transfers = []; saveState(); fillSetup(); showScreen('setup');
   }
 
@@ -243,6 +352,18 @@
   ['players-count','start-stack','buy-in','round-count','round-minutes','rebuy-round','small-blind','big-blind','blind-growth'].forEach(id => $(id).addEventListener('input', readSetup));
   ['rounds-enabled','rebuy-enabled','blinds-enabled'].forEach(id => $(id).addEventListener('change', () => { toggleSettings(); readSetup(); }));
   $('continue').addEventListener('click', preparePlayers); $('start-game').addEventListener('click', startGame); $('pause-game').addEventListener('click', togglePause);
+  $('add-music').addEventListener('click', () => $('music-files').click());
+  $('music-files').addEventListener('change', event => importMusic(event.target.files));
+  $('music-toggle').addEventListener('click', toggleMusic);
+  $('music-previous').addEventListener('click', () => changeMusicTrack(-1));
+  $('music-next').addEventListener('click', () => changeMusicTrack(1));
+  $('music-volume').addEventListener('input', event => { musicAudio.volume = Number(event.target.value); });
+  musicAudio.addEventListener('play', renderMusicPlayer); musicAudio.addEventListener('pause', renderMusicPlayer); musicAudio.addEventListener('ended', () => changeMusicTrack(1));
+  if ('mediaSession' in navigator) {
+    [['play', () => musicAudio.play()], ['pause', () => musicAudio.pause()], ['previoustrack', () => changeMusicTrack(-1)], ['nexttrack', () => changeMusicTrack(1)]].forEach(([action, handler]) => {
+      try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) {}
+    });
+  }
   $('finish-early').addEventListener('click', () => { if (confirm('Завершить игру и перейти к расчёту?')) openCashout(); });
   $('finish-game').addEventListener('click', openCashout); $('calculate-transfers').addEventListener('click', calculateTransfers); $('new-game').addEventListener('click', newGame);
   document.querySelectorAll('.back-button').forEach(button => button.addEventListener('click', () => { if (button.dataset.target === 'game') { renderGame(); startTimerLoop(); } showScreen(button.dataset.target); }));
@@ -260,6 +381,7 @@
   if (isAppleMobile && !isStandalone) $('install-app').hidden = false;
 
   fillSetup();
+  loadMusicLibrary();
   if (!screens.includes(state.screen)) state.screen = 'setup';
   if (state.screen === 'players') renderPlayerInputs();
   if (state.screen === 'game') { syncTimer(); renderGame(); startTimerLoop(); }

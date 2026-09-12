@@ -80,6 +80,20 @@
         </div>
         <div class="blind-panel"><span>Текущие блайнды</span><strong id="blind-value">10 / 20</strong></div>
         <div class="action-grid"><button id="pause-game" class="secondary-button" type="button">Пауза</button><button id="finish-early" class="danger-button" type="button">Завершить досрочно</button></div>
+        <section class="music-panel" aria-labelledby="music-title">
+          <div class="music-heading"><div><h2 id="music-title">Фоновая музыка</h2><p id="music-status" class="hint">Добавьте MP3 или M4A — треки сохранятся на телефоне.</p></div><button id="add-music" class="small-button" type="button">+ Треки</button></div>
+          <input id="music-files" type="file" accept="audio/mpeg,audio/mp4,.mp3,.m4a" multiple hidden>
+          <div id="music-player" hidden>
+            <strong id="music-track-name" class="music-track-name">Трек</strong>
+            <div class="music-controls">
+              <button id="music-previous" class="music-button" type="button" aria-label="Предыдущий трек">‹</button>
+              <button id="music-toggle" class="music-button music-play" type="button" aria-label="Воспроизвести">▶</button>
+              <button id="music-next" class="music-button" type="button" aria-label="Следующий трек">›</button>
+              <label class="volume-control"><span>Громкость</span><input id="music-volume" type="range" min="0" max="1" step="0.05" value="0.55"></label>
+            </div>
+            <div id="music-library" class="music-library"></div>
+          </div>
+        </section>
         <h2>Участники и ребаи</h2>
         <div id="game-roster"></div>
         <p id="rebuy-note" class="hint"></p>
