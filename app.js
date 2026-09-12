@@ -81,15 +81,26 @@
 
   function renderMusicPlayer() {
     const hasTracks = musicTracks.length > 0;
-    $('music-player').hidden = !hasTracks;
+    $('music-player').classList.toggle('empty', !hasTracks);
     $('music-status').textContent = hasTracks ? `${musicTracks.length} ${musicTracks.length === 1 ? 'трек сохранён' : 'треков сохранено'} офлайн` : 'Добавьте MP3 или M4A — треки сохранятся на телефоне.';
-    if (!hasTracks) return;
+    $('music-next').disabled = !hasTracks;
+    $('music-previous').disabled = !hasTracks;
+    if (!hasTracks) { $('music-track-name').textContent = 'Музыка не добавлена'; $('music-library').innerHTML = ''; return; }
     $('music-track-name').textContent = musicTracks[currentTrackIndex].name;
     $('music-toggle').textContent = musicAudio.paused ? '▶' : '❚❚';
     $('music-toggle').setAttribute('aria-label', musicAudio.paused ? 'Воспроизвести' : 'Пауза');
     $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row ${index === currentTrackIndex ? 'active' : ''}"><button class="music-select" type="button" data-index="${index}">${escapeHtml(track.name)}</button><button class="music-remove" type="button" data-remove="${track.id}" aria-label="Удалить трек">×</button></div>`).join('');
     document.querySelectorAll('.music-select').forEach(button => button.addEventListener('click', () => setMusicTrack(Number(button.dataset.index), true)));
     document.querySelectorAll('.music-remove').forEach(button => button.addEventListener('click', () => removeMusicTrack(button.dataset.remove)));
+  }
+
+  function toggleMusicDetails() {
+    const details = $('music-details');
+    const willExpand = details.hidden;
+    details.hidden = !willExpand;
+    $('music-expand').textContent = willExpand ? '⌄' : '⌃';
+    $('music-expand').setAttribute('aria-expanded', String(willExpand));
+    $('music-expand').setAttribute('aria-label', willExpand ? 'Скрыть плейлист' : 'Показать плейлист');
   }
 
   async function importMusic(files) {
@@ -154,7 +165,6 @@
   }
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    $('save-status').textContent = 'Игра сохранена на этом устройстве';
   }
   const number = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value);
   const money = value => number(value) + ' ₽';
@@ -356,6 +366,7 @@
   $('music-toggle').addEventListener('click', toggleMusic);
   $('music-previous').addEventListener('click', () => changeMusicTrack(-1));
   $('music-next').addEventListener('click', () => changeMusicTrack(1));
+  $('music-expand').addEventListener('click', toggleMusicDetails);
   $('music-volume').addEventListener('input', event => { musicAudio.volume = Number(event.target.value); });
   musicAudio.addEventListener('play', renderMusicPlayer); musicAudio.addEventListener('pause', renderMusicPlayer); musicAudio.addEventListener('ended', () => changeMusicTrack(1));
   if ('mediaSession' in navigator) {
