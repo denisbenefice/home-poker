@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Домашний покер">
+  <title>Домашний покер</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand"><span class="brand-mark">♠</span><strong>Домашний покер</strong></div>
+      <div class="header-actions"><button id="install-app" class="small-button" type="button" hidden>Установить</button><span class="mode-badge">Кэш</span></div>
+      <div class="steps" aria-label="Прогресс настройки">
+        <span class="step active"></span><span class="step"></span><span class="step"></span><span class="step"></span>
+      </div>
+    </header>
+
+    <main>
+      <section id="screen-setup" class="screen active" aria-labelledby="setup-title">
+        <h1 id="setup-title">Настройка игры</h1>
+        <p class="lead">Основные параметры кэш-игры.</p>
+
+        <div class="form-grid">
+          <label class="field">Игроков<input id="players-count" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
+          <label class="field">Стек по номиналу<input id="start-stack" type="number" inputmode="numeric" min="1" value="1000"></label>
+          <label class="field full">Стоимость входа, ₽<input id="buy-in" type="number" inputmode="decimal" min="1" value="1000"></label>
+        </div>
+
+        <details class="section-details">
+          <summary>Калькулятор набора фишек</summary>
+          <p class="hint">Стек — сумма номиналов фишек у игрока. Укажите количество фишек каждого номинала во всём чемоданчике.</p>
+          <div id="chip-list" class="chip-list"></div>
+          <button id="add-chip" class="secondary-button" type="button">+ Добавить номинал</button>
+          <div id="chip-result" class="calculation" aria-live="polite"></div>
+        </details>
+
+        <h2>Дополнительно</h2>
+        <label class="toggle-row"><span><strong>Раунды и таймер</strong><small>Ограничить время игры</small></span><input id="rounds-enabled" type="checkbox" checked></label>
+        <div id="round-settings" class="form-grid compact">
+          <label class="field">Раундов<input id="round-count" type="number" inputmode="numeric" min="1" value="6"></label>
+          <label class="field">Минут в раунде<input id="round-minutes" type="number" inputmode="numeric" min="1" value="20"></label>
+        </div>
+
+        <label class="toggle-row"><span><strong>Дедлайн ребаев</strong><small>После какого раунда закрыть</small></span><input id="rebuy-enabled" type="checkbox" checked></label>
+        <div id="rebuy-settings" class="form-grid compact">
+          <label class="field full">Ребаи до конца раунда<input id="rebuy-round" type="number" inputmode="numeric" min="1" value="3"></label>
+        </div>
+
+        <label class="toggle-row"><span><strong>Рост блайндов</strong><small>Повышать каждый раунд</small></span><input id="blinds-enabled" type="checkbox" checked></label>
+        <div id="blind-settings" class="form-grid compact">
+          <label class="field">Малый блайнд<input id="small-blind" type="number" inputmode="numeric" min="1" value="10"></label>
+          <label class="field">Большой блайнд<input id="big-blind" type="number" inputmode="numeric" min="1" value="20"></label>
+          <label class="field full">Рост за раунд<select id="blind-growth"><option value="1">Без роста</option><option value="1.5">× 1,5</option><option value="2" selected>× 2</option></select></label>
+        </div>
+        <p id="setup-error" class="error" role="alert"></p>
+        <button id="continue" class="primary-button" type="button">Продолжить</button>
+      </section>
+
+      <section id="screen-players" class="screen" aria-labelledby="players-title">
+        <h1 id="players-title">Кто играет?</h1>
+        <p class="lead">Каждому участнику будет выдан одинаковый стек по номиналу.</p>
+        <div id="player-list" class="player-list"></div>
+        <button id="start-game" class="primary-button" type="button">Начать игру</button>
+        <button class="back-button" data-target="setup" type="button">Назад к настройкам</button>
+      </section>
+
+      <section id="screen-game" class="screen" aria-labelledby="game-title">
+        <div class="game-clock">
+          <p id="round-label" class="round-label">Раунд 1 из 6</p>
+          <h1 id="game-title" class="timer">20:00</h1>
+          <p id="timer-caption" class="lead">до следующего раунда</p>
+        </div>
+        <div class="blind-panel"><span>Текущие блайнды</span><strong id="blind-value">10 / 20</strong></div>
+        <div class="action-grid"><button id="pause-game" class="secondary-button" type="button">Пауза</button><button id="finish-early" class="danger-button" type="button">Завершить досрочно</button></div>
+        <h2>Участники и ребаи</h2>
+        <div id="game-roster"></div>
+        <p id="rebuy-note" class="hint"></p>
+        <button id="finish-game" class="primary-button" type="button" hidden>Завершить игру</button>
+      </section>
+
+      <section id="screen-cashout" class="screen" aria-labelledby="cashout-title">
+        <h1 id="cashout-title">Подсчёт результатов</h1>
+        <p class="lead">Сложите номиналы оставшихся фишек каждого игрока.</p>
+        <div class="stats"><div><span>В банке</span><strong id="pot-value">0 ₽</strong></div><div><span>Выдано по номиналу</span><strong id="issued-value">0</strong></div></div>
+        <div id="cashout-list"></div>
+        <p id="cashout-error" class="error" role="alert"></p>
+        <button id="calculate-transfers" class="primary-button" type="button">Рассчитать переводы</button>
+        <button class="back-button" data-target="game" type="button">Вернуться к игре</button>
+      </section>
+
+      <section id="screen-settlement" class="screen" aria-labelledby="settlement-title">
+        <h1 id="settlement-title">Кто кому переводит</h1>
+        <p class="lead">Минимальный список переводов для закрытия расчётов.</p>
+        <div id="transfers" class="transfers"></div>
+        <button id="new-game" class="primary-button" type="button">Новая игра</button>
+      </section>
+    </main>
+
+    <footer><span id="save-status">Данные хранятся только на этом устройстве</span><span class="offline-dot" aria-hidden="true"></span></footer>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
