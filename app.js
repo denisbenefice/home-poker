@@ -314,7 +314,6 @@
   }
 
   function openCashout() {
-    musicAudio.pause();
     syncTimer(); state.game.running = false; state.game.endAt = null; clearInterval(timerId); saveState();
     const issued = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.stack, 0);
     const pot = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.buyIn, 0);
