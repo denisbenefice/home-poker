@@ -80,6 +80,10 @@ button, input, select { font: inherit; }
 }
 .section-details summary::-webkit-details-marker { display: none; }
 .section-details summary::marker { content: ""; }
+.section-details > summary > span,
+.section-details > summary > .details-chevron {
+  transform: translateY(-.0625rem);
+}
 .details-chevron { inline-size: 1.25rem; block-size: 1.25rem; flex: none; }
 .calculator-body { display: grid; gap: 1rem; }
 .calculator-add { width: 100%; }
