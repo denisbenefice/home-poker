@@ -367,6 +367,10 @@
   }
 
   $('add-chip').addEventListener('click', () => { state.inventory.push({ denomination: 25, count: 20 }); saveState(); renderInventory(); });
+  $('increment-players').addEventListener('click', () => {
+    $('players-count').value = Math.min(12, Math.max(2, Math.floor(inputNumber('players-count')) + 1));
+    readSetup();
+  });
   ['players-count','start-stack','buy-in','round-count','round-minutes','rebuy-round','small-blind','big-blind','blind-growth'].forEach(id => $(id).addEventListener('input', readSetup));
   ['rounds-enabled','rebuy-enabled','blinds-enabled'].forEach(id => $(id).addEventListener('change', () => { toggleSettings(); readSetup(); }));
   $('continue').addEventListener('click', preparePlayers); $('start-game').addEventListener('click', startGame); $('pause-game').addEventListener('click', togglePause);

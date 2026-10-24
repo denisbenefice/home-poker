@@ -11,8 +11,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=15">
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="putty.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body>
   <div class="app-shell ds">
@@ -29,70 +29,68 @@
 
     <main>
       <section id="screen-setup" class="screen active" aria-labelledby="setup-title">
-        <div class="screen-intro">
-          <h1 id="setup-title" class="ds-display">Настройка игры</h1>
-          <p class="ds-supporting">Основные параметры кэш-игры.</p>
+        <div class="setup-card ds-card">
+          <div class="ds-card-body setup-card-body">
+            <h1 id="setup-title" class="ds-section-title">Игроки, стек</h1>
+            <div class="player-count-row">
+              <label class="ds-field field"><span class="ds-label">Игроки</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
+              <button id="increment-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
+            </div>
+            <div class="form-grid">
+              <label class="ds-field field"><span class="ds-label">Бай-ин, ₽</span><input id="buy-in" class="ds-input" type="number" inputmode="decimal" min="1" value="1000"></label>
+              <label class="ds-field field"><span class="ds-label">Стек</span><input id="start-stack" class="ds-input" type="number" inputmode="numeric" min="1" value="1000"></label>
+            </div>
+          </div>
         </div>
 
-        <div class="form-grid">
-          <label class="ds-field field"><span class="ds-label">Игроков</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
-          <label class="ds-field field"><span class="ds-label">Стек по номиналу</span><input id="start-stack" class="ds-input" type="number" inputmode="numeric" min="1" value="1000"></label>
-          <label class="ds-field field full"><span class="ds-label">Стоимость входа, ₽</span><input id="buy-in" class="ds-input" type="number" inputmode="decimal" min="1" value="1000"></label>
-        </div>
-
-        <details class="section-details ds-card">
-          <summary class="ds-card-header">Калькулятор набора фишек</summary>
+        <details class="section-details ds-card" open>
+          <summary class="ds-card-header"><span>Калькулятор</span><svg class="details-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg></summary>
           <div class="ds-card-body calculator-body">
-            <p class="ds-supporting">Стек — сумма номиналов фишек у игрока. Укажите количество фишек каждого номинала во всём чемоданчике.</p>
             <div id="chip-list" class="chip-list"></div>
-            <button id="add-chip" class="ds-btn ds-btn-secondary" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить номинал</button>
+            <button id="add-chip" class="ds-btn ds-btn-secondary calculator-add" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить</button>
             <div id="chip-result" class="calculation ds-alert" aria-live="polite"></div>
           </div>
         </details>
 
-        <h2 class="ds-section-title section-heading">Дополнительно</h2>
-        <div class="settings-stack">
-          <section class="setting-group">
-            <label class="settings-card ds-card">
-              <span class="ds-card-body settings-row">
-                <span class="settings-copy"><strong>Раунды и таймер</strong><small class="ds-supporting">Ограничить время игры</small></span>
+        <details class="section-details ds-card" open>
+          <summary class="ds-card-header"><span>Дополнительно</span><svg class="details-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg></summary>
+          <div class="ds-card-body settings-stack">
+            <section class="setting-group">
+              <label class="settings-row">
+                <span class="settings-copy"><strong>Раунды и таймер</strong></span>
                 <span class="ds-switch"><input id="rounds-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
-              </span>
-            </label>
-            <div id="round-settings" class="form-grid compact">
-              <label class="ds-field field"><span class="ds-label">Раундов</span><input id="round-count" class="ds-input" type="number" inputmode="numeric" min="1" value="6"></label>
-              <label class="ds-field field"><span class="ds-label">Минут в раунде</span><input id="round-minutes" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
-            </div>
-          </section>
+              </label>
+              <div id="round-settings" class="form-grid compact">
+                <label class="ds-field field"><span class="ds-label">Раундов</span><input id="round-count" class="ds-input" type="number" inputmode="numeric" min="1" value="6"></label>
+                <label class="ds-field field"><span class="ds-label">Длительность, мин</span><input id="round-minutes" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
+              </div>
+            </section>
 
-          <section class="setting-group">
-            <label class="settings-card ds-card">
-              <span class="ds-card-body settings-row">
-                <span class="settings-copy"><strong>Дедлайн ребаев</strong><small class="ds-supporting">После какого раунда закрыть</small></span>
+            <section class="setting-group">
+              <label class="settings-row">
+                <span class="settings-copy"><strong>Дедлайн ребаев</strong></span>
                 <span class="ds-switch"><input id="rebuy-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
-              </span>
-            </label>
-            <div id="rebuy-settings" class="form-grid compact">
-              <label class="ds-field field full"><span class="ds-label">Ребаи до конца раунда</span><input id="rebuy-round" class="ds-input" type="number" inputmode="numeric" min="1" value="3"></label>
-            </div>
-          </section>
+              </label>
+              <div id="rebuy-settings" class="form-grid compact">
+                <label class="ds-field field full"><span class="ds-label">До конца раунда</span><input id="rebuy-round" class="ds-input" type="number" inputmode="numeric" min="1" value="3"></label>
+              </div>
+            </section>
 
-          <section class="setting-group">
-            <label class="settings-card ds-card">
-              <span class="ds-card-body settings-row">
-                <span class="settings-copy"><strong>Рост блайндов</strong><small class="ds-supporting">Повышать каждый раунд</small></span>
+            <section class="setting-group">
+              <label class="settings-row">
+                <span class="settings-copy"><strong>Рост блайндов</strong></span>
                 <span class="ds-switch"><input id="blinds-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
-              </span>
-            </label>
-            <div id="blind-settings" class="form-grid compact">
-              <label class="ds-field field"><span class="ds-label">Малый блайнд</span><input id="small-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="10"></label>
-              <label class="ds-field field"><span class="ds-label">Большой блайнд</span><input id="big-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
-              <label class="ds-field field full"><span class="ds-label">Рост за раунд</span><select id="blind-growth" class="ds-select"><option value="1">Без роста</option><option value="1.5">× 1,5</option><option value="2" selected>× 2</option></select></label>
-            </div>
-          </section>
-        </div>
+              </label>
+              <div id="blind-settings" class="form-grid compact">
+                <label class="ds-field field"><span class="ds-label">Малый блайнд</span><input id="small-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="10"></label>
+                <label class="ds-field field"><span class="ds-label">Большой блайнд</span><input id="big-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
+                <label class="ds-field field full"><span class="ds-label">Рост за раунд</span><select id="blind-growth" class="ds-select"><option value="1">Без роста</option><option value="1.5">× 1,5</option><option value="2" selected>× 2</option></select></label>
+              </div>
+            </section>
+          </div>
+        </details>
         <p id="setup-error" class="error-message ds-alert" role="alert"></p>
-        <button id="continue" class="ds-btn ds-btn-primary ds-btn-lg screen-primary-action" type="button">Продолжить</button>
+        <button id="continue" class="ds-btn ds-btn-primary ds-btn-lg screen-primary-action" type="button">Начать</button>
       </section>
 
       <section id="screen-players" class="screen" aria-labelledby="players-title">
@@ -102,7 +100,7 @@
         </div>
         <div id="player-list" class="player-list"></div>
         <div class="screen-actions">
-          <button id="start-game" class="ds-btn ds-btn-primary ds-btn-lg" type="button">Начать игру</button>
+          <button id="start-game" class="ds-btn ds-btn-primary ds-btn-lg" type="button">Запустить игру</button>
           <button class="back-button ds-btn ds-btn-ghost" data-target="setup" type="button">Назад к настройкам</button>
         </div>
       </section>
@@ -174,6 +172,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=15" defer></script>
+  <script src="app.js?v=16" defer></script>
 </body>
 </html>

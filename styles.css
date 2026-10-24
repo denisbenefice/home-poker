@@ -49,9 +49,32 @@ button, input, select { font: inherit; }
 .form-grid.compact { margin: 0; }
 .field.full { grid-column: 1 / -1; }
 
+.setup-card-body { display: grid; gap: 1.5rem; }
+.setup-card-body .ds-section-title { margin: 0; }
+.player-count-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.5rem;
+  gap: .75rem;
+  align-items: end;
+}
+.player-count-row .ds-field { margin: 0; }
+.player-count-row .ds-btn { inline-size: 100%; }
+.player-count-row .ds-btn svg { inline-size: 1.375rem; block-size: 1.375rem; }
 .section-details { margin-top: 2rem; }
-.section-details summary { min-height: 3.25rem; cursor: pointer; font-weight: 600; }
+.section-details summary {
+  display: flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.section-details summary::-webkit-details-marker { display: none; }
+.section-details summary::marker { content: ""; }
+.details-chevron { inline-size: 1.25rem; block-size: 1.25rem; flex: none; }
 .calculator-body { display: grid; gap: 1rem; }
+.calculator-add { width: 100%; }
 .chip-list { display: grid; gap: .75rem; }
 .chip-row {
   display: grid;
@@ -73,12 +96,13 @@ button, input, select { font: inherit; }
 
 .settings-stack { display: grid; gap: 2rem; }
 .setting-group { display: grid; gap: .5rem; }
-.settings-card { cursor: pointer; }
 .settings-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+  min-height: 2.75rem;
+  cursor: pointer;
 }
 .settings-copy { display: grid; gap: .25rem; }
 .switch-input {
