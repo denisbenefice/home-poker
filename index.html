@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#f7f1df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Домашний покер">
@@ -11,92 +11,118 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="putty.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-shell">
+  <div class="app-shell ds">
     <header class="app-header">
-      <div class="brand"><span class="brand-mark">♠</span><strong>Домашний покер</strong></div>
-      <div class="header-actions"><button id="install-app" class="small-button" type="button" hidden>Установить</button><span class="mode-badge">Кэш</span></div>
-      <div class="steps" aria-label="Прогресс настройки">
-        <span class="step active"></span><span class="step"></span><span class="step"></span><span class="step"></span>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">♠</span><strong>Домашний покер</strong></div>
+      <div class="header-actions">
+        <button id="install-app" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" hidden>Установить</button>
+        <span class="ds-badge">Кэш</span>
+      </div>
+      <div id="setup-progress" class="ds-progress setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+        <div class="ds-progress-bar" style="width:20%"></div>
       </div>
     </header>
 
     <main>
       <section id="screen-setup" class="screen active" aria-labelledby="setup-title">
-        <h1 id="setup-title">Настройка игры</h1>
-        <p class="lead">Основные параметры кэш-игры.</p>
+        <div class="screen-intro">
+          <h1 id="setup-title" class="ds-display">Настройка игры</h1>
+          <p class="ds-supporting">Основные параметры кэш-игры.</p>
+        </div>
 
         <div class="form-grid">
-          <label class="field">Игроков<input id="players-count" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
-          <label class="field">Стек по номиналу<input id="start-stack" type="number" inputmode="numeric" min="1" value="1000"></label>
-          <label class="field full">Стоимость входа, ₽<input id="buy-in" type="number" inputmode="decimal" min="1" value="1000"></label>
+          <label class="ds-field field"><span class="ds-label">Игроков</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
+          <label class="ds-field field"><span class="ds-label">Стек по номиналу</span><input id="start-stack" class="ds-input" type="number" inputmode="numeric" min="1" value="1000"></label>
+          <label class="ds-field field full"><span class="ds-label">Стоимость входа, ₽</span><input id="buy-in" class="ds-input" type="number" inputmode="decimal" min="1" value="1000"></label>
         </div>
 
-        <details class="section-details">
-          <summary>Калькулятор набора фишек</summary>
-          <p class="hint">Стек — сумма номиналов фишек у игрока. Укажите количество фишек каждого номинала во всём чемоданчике.</p>
-          <div id="chip-list" class="chip-list"></div>
-          <button id="add-chip" class="secondary-button" type="button">+ Добавить номинал</button>
-          <div id="chip-result" class="calculation" aria-live="polite"></div>
+        <details class="section-details ds-card">
+          <summary class="ds-card-header">Калькулятор набора фишек</summary>
+          <div class="ds-card-body calculator-body">
+            <p class="ds-supporting">Стек — сумма номиналов фишек у игрока. Укажите количество фишек каждого номинала во всём чемоданчике.</p>
+            <div id="chip-list" class="chip-list"></div>
+            <button id="add-chip" class="ds-btn ds-btn-secondary" type="button">+ Добавить номинал</button>
+            <div id="chip-result" class="calculation ds-alert" aria-live="polite"></div>
+          </div>
         </details>
 
-        <h2>Дополнительно</h2>
-        <label class="toggle-row"><span><strong>Раунды и таймер</strong><small>Ограничить время игры</small></span><input id="rounds-enabled" type="checkbox" checked></label>
+        <h2 class="ds-section-title section-heading">Дополнительно</h2>
+        <label class="toggle-row ds-card">
+          <span><strong>Раунды и таймер</strong><small class="ds-supporting">Ограничить время игры</small></span>
+          <span class="ds-switch"><input id="rounds-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
+        </label>
         <div id="round-settings" class="form-grid compact">
-          <label class="field">Раундов<input id="round-count" type="number" inputmode="numeric" min="1" value="6"></label>
-          <label class="field">Минут в раунде<input id="round-minutes" type="number" inputmode="numeric" min="1" value="20"></label>
+          <label class="ds-field field"><span class="ds-label">Раундов</span><input id="round-count" class="ds-input" type="number" inputmode="numeric" min="1" value="6"></label>
+          <label class="ds-field field"><span class="ds-label">Минут в раунде</span><input id="round-minutes" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
         </div>
 
-        <label class="toggle-row"><span><strong>Дедлайн ребаев</strong><small>После какого раунда закрыть</small></span><input id="rebuy-enabled" type="checkbox" checked></label>
+        <label class="toggle-row ds-card">
+          <span><strong>Дедлайн ребаев</strong><small class="ds-supporting">После какого раунда закрыть</small></span>
+          <span class="ds-switch"><input id="rebuy-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
+        </label>
         <div id="rebuy-settings" class="form-grid compact">
-          <label class="field full">Ребаи до конца раунда<input id="rebuy-round" type="number" inputmode="numeric" min="1" value="3"></label>
+          <label class="ds-field field full"><span class="ds-label">Ребаи до конца раунда</span><input id="rebuy-round" class="ds-input" type="number" inputmode="numeric" min="1" value="3"></label>
         </div>
 
-        <label class="toggle-row"><span><strong>Рост блайндов</strong><small>Повышать каждый раунд</small></span><input id="blinds-enabled" type="checkbox" checked></label>
+        <label class="toggle-row ds-card">
+          <span><strong>Рост блайндов</strong><small class="ds-supporting">Повышать каждый раунд</small></span>
+          <span class="ds-switch"><input id="blinds-enabled" class="switch-input" type="checkbox" checked><span class="ds-switch-track" aria-hidden="true"><span class="ds-switch-thumb"></span></span></span>
+        </label>
         <div id="blind-settings" class="form-grid compact">
-          <label class="field">Малый блайнд<input id="small-blind" type="number" inputmode="numeric" min="1" value="10"></label>
-          <label class="field">Большой блайнд<input id="big-blind" type="number" inputmode="numeric" min="1" value="20"></label>
-          <label class="field full">Рост за раунд<select id="blind-growth"><option value="1">Без роста</option><option value="1.5">× 1,5</option><option value="2" selected>× 2</option></select></label>
+          <label class="ds-field field"><span class="ds-label">Малый блайнд</span><input id="small-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="10"></label>
+          <label class="ds-field field"><span class="ds-label">Большой блайнд</span><input id="big-blind" class="ds-input" type="number" inputmode="numeric" min="1" value="20"></label>
+          <label class="ds-field field full"><span class="ds-label">Рост за раунд</span><select id="blind-growth" class="ds-select"><option value="1">Без роста</option><option value="1.5">× 1,5</option><option value="2" selected>× 2</option></select></label>
         </div>
-        <p id="setup-error" class="error" role="alert"></p>
-        <button id="continue" class="primary-button" type="button">Продолжить</button>
+        <p id="setup-error" class="error-message ds-alert" role="alert"></p>
+        <button id="continue" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button">Продолжить</button>
       </section>
 
       <section id="screen-players" class="screen" aria-labelledby="players-title">
-        <h1 id="players-title">Кто играет?</h1>
-        <p class="lead">Каждому участнику будет выдан одинаковый стек по номиналу.</p>
+        <div class="screen-intro">
+          <h1 id="players-title" class="ds-display">Кто играет?</h1>
+          <p class="ds-supporting">Каждому участнику будет выдан одинаковый стек по номиналу.</p>
+        </div>
         <div id="player-list" class="player-list"></div>
-        <button id="start-game" class="primary-button" type="button">Начать игру</button>
-        <button class="back-button" data-target="setup" type="button">Назад к настройкам</button>
+        <button id="start-game" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button">Начать игру</button>
+        <button class="back-button ds-btn ds-btn-ghost full-action" data-target="setup" type="button">Назад к настройкам</button>
       </section>
 
       <section id="screen-game" class="screen" aria-labelledby="game-title">
         <div class="game-clock">
-          <p id="round-label" class="round-label">Раунд 1 из 6</p>
-          <h1 id="game-title" class="timer">20:00</h1>
-          <p id="timer-caption" class="lead">до следующего раунда</p>
+          <p id="round-label" class="ds-supporting">Раунд 1 из 6</p>
+          <h1 id="game-title" class="ds-display timer">20:00</h1>
+          <p id="timer-caption" class="ds-supporting">до следующего раунда</p>
         </div>
-        <div class="blind-panel"><span>Текущие блайнды</span><strong id="blind-value">10 / 20</strong></div>
-        <div class="action-grid"><button id="pause-game" class="secondary-button" type="button">Пауза</button><button id="finish-early" class="danger-button" type="button">Завершить досрочно</button></div>
-        <h2>Участники и ребаи</h2>
-        <div id="game-roster"></div>
-        <p id="rebuy-note" class="hint"></p>
-        <button id="finish-game" class="primary-button" type="button" hidden>Завершить игру</button>
-        <section id="music-player" class="music-dock" aria-labelledby="music-title">
+        <div class="blind-panel ds-card">
+          <span class="ds-supporting">Текущие блайнды</span>
+          <strong id="blind-value" class="blind-value">10 / 20</strong>
+        </div>
+        <div class="action-grid">
+          <button id="pause-game" class="ds-btn ds-btn-secondary" type="button">Пауза</button>
+          <button id="finish-early" class="ds-btn ds-btn-outline" type="button">Завершить досрочно</button>
+        </div>
+        <h2 class="ds-section-title section-heading">Участники и ребаи</h2>
+        <div id="game-roster" class="ds-card list-card"></div>
+        <p id="rebuy-note" class="ds-supporting rebuy-note"></p>
+        <button id="finish-game" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button" hidden>Завершить игру</button>
+
+        <section id="music-player" class="music-dock ds-card" aria-label="Фоновая музыка">
           <div class="music-dock-main">
-            <button id="music-toggle" class="music-button music-play" type="button" aria-label="Воспроизвести">▶</button>
-            <div class="music-track-copy"><strong id="music-track-name">Музыка не добавлена</strong><span id="music-status">Добавьте MP3 или M4A</span></div>
-            <button id="music-next" class="music-button" type="button" aria-label="Следующий трек">›</button>
-            <button id="music-expand" class="music-button music-expand" type="button" aria-label="Показать плейлист" aria-expanded="false">⌃</button>
+            <button id="music-toggle" class="ds-btn ds-btn-primary music-icon-button music-play" type="button" aria-label="Воспроизвести"><svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M228.23 134.69L84.15 222.81A8 8 0 0 1 72 216.12V39.88a8 8 0 0 1 12.15-6.69l144.08 88.12a7.82 7.82 0 0 1 0 13.38" opacity=".2"/><path d="M232.4 114.49L88.32 26.35a16 16 0 0 0-16.2-.3A15.86 15.86 0 0 0 64 39.87v176.26A15.94 15.94 0 0 0 80 232a16.07 16.07 0 0 0 8.36-2.35l144.04-88.14a15.81 15.81 0 0 0 0-27ZM80 215.94V40l143.83 88Z"/></g></svg></button>
+            <div class="music-track-copy"><strong id="music-track-name">Музыка не добавлена</strong><span id="music-status" class="ds-supporting">Добавьте MP3 или M4A</span></div>
+            <button id="music-next" class="ds-btn ds-btn-secondary music-icon-button" type="button" aria-label="Следующий трек"><svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M196.3 134.65L68.19 214.77A8 8 0 0 1 56 208.12V47.88a8 8 0 0 1 12.19-6.65l128.11 80.12a7.83 7.83 0 0 1 0 13.3" opacity=".2"/><path d="M200 32a8 8 0 0 0-8 8v69.23L72.43 34.45A15.95 15.95 0 0 0 48 47.88v160.24a16 16 0 0 0 24.43 13.43L192 146.77V216a8 8 0 0 0 16 0V40a8 8 0 0 0-8-8M64 207.93V48.05l127.84 80Z"/></g></svg></button>
+            <button id="music-expand" class="ds-btn ds-btn-secondary music-icon-button" type="button" aria-label="Показать плейлист" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 160H48l80-80Z" opacity=".2"/><path d="m213.66 154.34l-80-80a8 8 0 0 0-11.32 0l-80 80A8 8 0 0 0 48 168h160a8 8 0 0 0 5.66-13.66M67.31 152L128 91.31L188.69 152Z"/></g></svg></button>
           </div>
           <div id="music-details" class="music-details" hidden>
             <div class="music-toolbar">
-              <button id="add-music" class="secondary-button" type="button">+ Добавить треки</button>
-              <button id="music-previous" class="secondary-button" type="button">Предыдущий</button>
+              <button id="add-music" class="ds-btn ds-btn-secondary" type="button">+ Добавить треки</button>
+              <button id="music-previous" class="ds-btn ds-btn-secondary" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 47.88v160.24a8 8 0 0 1-12.19 6.65L59.7 134.65a7.83 7.83 0 0 1 0-13.3l128.11-80.12A8 8 0 0 1 200 47.88" opacity=".2"/><path d="M199.81 34a16 16 0 0 0-16.24.43L64 109.23V40a8 8 0 0 0-16 0v176a8 8 0 0 0 16 0v-69.23l119.57 74.78A15.95 15.95 0 0 0 208 208.12V47.88A15.86 15.86 0 0 0 199.81 34M192 208L64.16 128L192 48.07Z"/></g></svg>Предыдущий</button>
             </div>
-            <label class="volume-control"><span>Громкость</span><input id="music-volume" type="range" min="0" max="1" step="0.05" value="0.55"></label>
+            <label class="ds-field volume-control"><span class="ds-label">Громкость</span><input id="music-volume" type="range" min="0" max="1" step="0.05" value="0.55"></label>
             <div id="music-library" class="music-library"></div>
           </div>
           <input id="music-files" type="file" accept="audio/mpeg,audio/mp4,.mp3,.m4a" multiple hidden>
@@ -104,23 +130,29 @@
       </section>
 
       <section id="screen-cashout" class="screen" aria-labelledby="cashout-title">
-        <h1 id="cashout-title">Подсчёт результатов</h1>
-        <p class="lead">Сложите номиналы оставшихся фишек каждого игрока.</p>
-        <div class="stats"><div><span>В банке</span><strong id="pot-value">0 ₽</strong></div><div><span>Выдано по номиналу</span><strong id="issued-value">0</strong></div></div>
-        <div id="cashout-list"></div>
-        <p id="cashout-error" class="error" role="alert"></p>
-        <button id="calculate-transfers" class="primary-button" type="button">Рассчитать переводы</button>
-        <button class="back-button" data-target="game" type="button">Вернуться к игре</button>
+        <div class="screen-intro">
+          <h1 id="cashout-title" class="ds-display">Подсчёт результатов</h1>
+          <p class="ds-supporting">Сложите номиналы оставшихся фишек каждого игрока.</p>
+        </div>
+        <div class="stats">
+          <div class="ds-card ds-card-body"><span class="ds-supporting">В банке</span><strong id="pot-value">0 ₽</strong></div>
+          <div class="ds-card ds-card-body"><span class="ds-supporting">Выдано по номиналу</span><strong id="issued-value">0</strong></div>
+        </div>
+        <div id="cashout-list" class="ds-card list-card"></div>
+        <p id="cashout-error" class="error-message ds-alert" role="alert"></p>
+        <button id="calculate-transfers" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button">Рассчитать переводы</button>
+        <button class="back-button ds-btn ds-btn-ghost full-action" data-target="game" type="button">Вернуться к игре</button>
       </section>
 
       <section id="screen-settlement" class="screen" aria-labelledby="settlement-title">
-        <h1 id="settlement-title">Кто кому переводит</h1>
-        <p class="lead">Минимальный список переводов для закрытия расчётов.</p>
-        <div id="transfers" class="transfers"></div>
-        <button id="new-game" class="primary-button" type="button">Новая игра</button>
+        <div class="screen-intro">
+          <h1 id="settlement-title" class="ds-display">Кто кому переводит</h1>
+          <p class="ds-supporting">Минимальный список переводов для закрытия расчётов.</p>
+        </div>
+        <div id="transfers" class="transfers ds-card list-card"></div>
+        <button id="new-game" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button">Новая игра</button>
       </section>
     </main>
-
   </div>
   <script src="app.js" defer></script>
 </body>

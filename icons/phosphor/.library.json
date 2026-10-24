@@ -1,0 +1,15 @@
+{
+  "library": "ph",
+  "prefix": "ph",
+  "source": "iconify",
+  "installedAt": "2026-10-24T20:34:47.844Z",
+  "icons": [
+    "caret-down-duotone",
+    "caret-up-duotone",
+    "pause-duotone",
+    "play-duotone",
+    "skip-back-duotone",
+    "skip-forward-duotone",
+    "trash-duotone"
+  ]
+}
