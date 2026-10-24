@@ -320,7 +320,7 @@
     $('pause-game').textContent = g.running ? 'Пауза' : 'Продолжить'; $('pause-game').hidden = !s.roundsEnabled || g.finished;
     $('finish-game').hidden = !g.finished;
     const rebuyAllowed = !g.finished && (!s.rebuyEnabled || g.round <= s.rebuyRound);
-    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Входов: ${player.rebuys + 1} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-outline" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>${icons.plus}Ребай</button></div>`).join('');
+    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Входов: ${player.rebuys + 1} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-secondary" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>${icons.plus}Ребай</button></div>`).join('');
     document.querySelectorAll('.rebuy-button').forEach(button => button.addEventListener('click', () => { const index = Number(button.dataset.player); state.players[index].rebuys++; state.players[index].cashout += s.stack; saveState(); renderGame(); }));
     $('rebuy-note').textContent = s.rebuyEnabled ? (rebuyAllowed ? `Ребаи доступны до конца раунда ${s.rebuyRound}.` : 'Дедлайн ребаев прошёл.') : 'Ребаи доступны всю игру.';
   }

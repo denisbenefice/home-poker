@@ -11,15 +11,15 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=21">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="putty.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <div class="app-shell ds">
     <header class="app-header">
       <div class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18v4" /><path d="M2 14.499a5.5 5.5 0 0 0 9.591 3.675.6.6 0 0 1 .818.001A5.5 5.5 0 0 0 22 14.5c0-2.29-1.5-4-3-5.5l-5.492-5.312a2 2 0 0 0-3-.02L5 8.999c-1.5 1.5-3 3.2-3 5.5" /></svg><strong>Домашний покер</strong></div>
       <div class="header-actions">
-        <button id="install-app" class="ds-btn ds-btn-outline ds-btn-sm" type="button" hidden>Установить</button>
+        <button id="install-app" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" hidden>Установить</button>
         <span class="ds-badge">Кэш</span>
       </div>
       <div id="setup-progress" class="ds-progress setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
@@ -34,7 +34,7 @@
           <div class="ds-card-body setup-card-body">
             <div class="player-count-row">
               <label class="ds-field field"><span class="ds-label">Игроки</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
-              <button id="increment-players" class="ds-btn ds-btn-outline" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
+              <button id="increment-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
             </div>
             <div class="form-grid">
               <label class="ds-field field"><span class="ds-label">Бай-ин, ₽</span><input id="buy-in" class="ds-input" type="number" inputmode="decimal" min="1" value="1000"></label>
@@ -47,7 +47,7 @@
           <summary class="ds-card-header"><span>Калькулятор</span><svg class="details-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg></summary>
           <div class="ds-card-body calculator-body">
             <div id="chip-list" class="chip-list"></div>
-            <button id="add-chip" class="ds-btn ds-btn-outline calculator-add" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить</button>
+            <button id="add-chip" class="ds-btn ds-btn-secondary calculator-add" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить</button>
             <div id="chip-result" class="calculation ds-alert" aria-live="polite"></div>
           </div>
         </details>
@@ -118,7 +118,7 @@
           </div>
         </div>
         <div class="action-grid">
-          <button id="pause-game" class="ds-btn ds-btn-outline" type="button">Пауза</button>
+          <button id="pause-game" class="ds-btn ds-btn-secondary" type="button">Пауза</button>
           <button id="finish-early" class="ds-btn ds-btn-outline" type="button">Завершить досрочно</button>
         </div>
         <h2 class="ds-section-title section-heading">Участники и ребаи</h2>
@@ -130,13 +130,13 @@
           <div class="music-dock-main ds-card-body">
             <button id="music-toggle" class="ds-btn ds-btn-primary" type="button" aria-label="Воспроизвести"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></svg></button>
             <div class="music-track-copy"><strong id="music-track-name">Музыка не добавлена</strong><span id="music-status" class="ds-supporting">Добавьте MP3 или M4A</span></div>
-            <button id="music-next" class="ds-btn ds-btn-outline ds-btn-sm" type="button" aria-label="Следующий трек"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v16" /><path d="M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z" /></svg></button>
-            <button id="music-expand" class="ds-btn ds-btn-outline ds-btn-sm" type="button" aria-label="Показать плейлист" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6" /></svg></button>
+            <button id="music-next" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" aria-label="Следующий трек"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v16" /><path d="M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z" /></svg></button>
+            <button id="music-expand" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" aria-label="Показать плейлист" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6" /></svg></button>
           </div>
           <div id="music-details" class="music-details ds-card-footer" hidden>
             <div class="music-toolbar">
-              <button id="add-music" class="ds-btn ds-btn-outline" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить треки</button>
-              <button id="music-previous" class="ds-btn ds-btn-outline" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z" /><path d="M3 20V4" /></svg>Предыдущий</button>
+              <button id="add-music" class="ds-btn ds-btn-secondary" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Добавить треки</button>
+              <button id="music-previous" class="ds-btn ds-btn-secondary" type="button"><svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z" /><path d="M3 20V4" /></svg>Предыдущий</button>
             </div>
             <label class="ds-field volume-control"><span class="ds-label">Громкость</span><input id="music-volume" type="range" min="0" max="1" step="0.05" value="0.55"></label>
             <div id="music-library" class="music-library"></div>
@@ -172,6 +172,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=21" defer></script>
+  <script src="app.js?v=22" defer></script>
 </body>
 </html>
