@@ -26,7 +26,8 @@
     pause: '<svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 48v160a8 8 0 0 1-8 8h-40a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8h40a8 8 0 0 1 8 8M96 40H56a8 8 0 0 0-8 8v160a8 8 0 0 0 8 8h40a8 8 0 0 0 8-8V48a8 8 0 0 0-8-8" opacity=".2"/><path d="M200 32h-40a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h40a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176h-40V48h40ZM96 32H56a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h40a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m0 176H56V48h40Z"/></g></svg>',
     caretUp: '<svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M208 160H48l80-80Z" opacity=".2"/><path d="m213.66 154.34l-80-80a8 8 0 0 0-11.32 0l-80 80A8 8 0 0 0 48 168h160a8 8 0 0 0 5.66-13.66M67.31 152L128 91.31L188.69 152Z"/></g></svg>',
     caretDown: '<svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="m208 96l-80 80l-80-80Z" opacity=".2"/><path d="M215.39 92.94A8 8 0 0 0 208 88H48a8 8 0 0 0-5.66 13.66l80 80a8 8 0 0 0 11.32 0l80-80a8 8 0 0 0 1.73-8.72M128 164.69L67.31 104h121.38Z"/></g></svg>',
-    trash: '<svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56Z" opacity=".2"/><path d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16M96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0m48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0"/></g></svg>'
+    trash: '<svg aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56Z" opacity=".2"/><path d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16M96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0m48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0"/></g></svg>',
+    plus: '<svg class="button-icon" aria-hidden="true" viewBox="0 0 256 256"><g fill="currentColor"><path d="M216 56v144a16 16 0 0 1-16 16H56a16 16 0 0 1-16-16V56a16 16 0 0 1 16-16h144a16 16 0 0 1 16 16" opacity=".2"/><path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8"/></g></svg>'
   };
 
   function openMusicDb() {
@@ -96,7 +97,7 @@
     $('music-track-name').textContent = musicTracks[currentTrackIndex].name;
     $('music-toggle').innerHTML = musicAudio.paused ? icons.play : icons.pause;
     $('music-toggle').setAttribute('aria-label', musicAudio.paused ? 'Воспроизвести' : 'Пауза');
-    $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row ${index === currentTrackIndex ? 'active' : ''}"><button class="music-select ds-btn ds-btn-ghost" type="button" data-index="${index}">${escapeHtml(track.name)}</button><button class="music-remove ds-btn ds-btn-ghost music-icon-button" type="button" data-remove="${track.id}" aria-label="Удалить трек">${icons.trash}</button></div>`).join('');
+    $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row"><button class="music-select ds-btn ds-btn-ghost" type="button" data-index="${index}" aria-pressed="${index === currentTrackIndex}">${escapeHtml(track.name)}</button><button class="music-remove ds-btn ds-btn-ghost ds-btn-sm" type="button" data-remove="${track.id}" aria-label="Удалить трек">${icons.trash}</button></div>`).join('');
     document.querySelectorAll('.music-select').forEach(button => button.addEventListener('click', () => setMusicTrack(Number(button.dataset.index), true)));
     document.querySelectorAll('.music-remove').forEach(button => button.addEventListener('click', () => removeMusicTrack(button.dataset.remove)));
   }
@@ -215,7 +216,7 @@
     $('chip-list').innerHTML = '';
     state.inventory.forEach((chip, index) => {
       const row = document.createElement('div'); row.className = 'chip-row';
-      row.innerHTML = `<label class="field ds-field"><span class="ds-label">Номинал</span><input class="chip-denomination ds-input" type="number" inputmode="numeric" min="1" value="${chip.denomination}"></label><label class="field ds-field"><span class="ds-label">Всего в наборе</span><input class="chip-count ds-input" type="number" inputmode="numeric" min="0" value="${chip.count}"></label><button class="remove-button ds-btn ds-btn-ghost music-icon-button" type="button" aria-label="Удалить номинал">${icons.trash}</button>`;
+      row.innerHTML = `<label class="field ds-field"><span class="ds-label">Номинал</span><input class="chip-denomination ds-input" type="number" inputmode="numeric" min="1" value="${chip.denomination}"></label><label class="field ds-field"><span class="ds-label">Всего в наборе</span><input class="chip-count ds-input" type="number" inputmode="numeric" min="0" value="${chip.count}"></label><button class="remove-button ds-btn ds-btn-ghost ds-btn-sm" type="button" aria-label="Удалить номинал">${icons.trash}</button>`;
       row.querySelector('.chip-denomination').addEventListener('input', event => { state.inventory[index].denomination = Number(event.target.value) || 0; saveState(); renderChipPlan(); });
       row.querySelector('.chip-count').addEventListener('input', event => { state.inventory[index].count = Math.floor(Number(event.target.value) || 0); saveState(); renderChipPlan(); });
       row.querySelector('button').addEventListener('click', () => { state.inventory.splice(index, 1); saveState(); renderInventory(); });
@@ -319,7 +320,7 @@
     $('pause-game').textContent = g.running ? 'Пауза' : 'Продолжить'; $('pause-game').hidden = !s.roundsEnabled || g.finished;
     $('finish-game').hidden = !g.finished;
     const rebuyAllowed = !g.finished && (!s.rebuyEnabled || g.round <= s.rebuyRound);
-    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Входов: ${player.rebuys + 1} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-secondary" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>+ Ребай</button></div>`).join('');
+    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Входов: ${player.rebuys + 1} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-secondary" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>${icons.plus}Ребай</button></div>`).join('');
     document.querySelectorAll('.rebuy-button').forEach(button => button.addEventListener('click', () => { const index = Number(button.dataset.player); state.players[index].rebuys++; state.players[index].cashout += s.stack; saveState(); renderGame(); }));
     $('rebuy-note').textContent = s.rebuyEnabled ? (rebuyAllowed ? `Ребаи доступны до конца раунда ${s.rebuyRound}.` : 'Дедлайн ребаев прошёл.') : 'Ребаи доступны всю игру.';
   }
