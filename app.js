@@ -393,7 +393,18 @@
     installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; $('install-app').hidden = true;
   });
   window.addEventListener('appinstalled', () => { $('install-app').hidden = true; });
-  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+  if ('serviceWorker' in navigator) {
+    let refreshingForUpdate = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshingForUpdate) return;
+      refreshingForUpdate = true;
+      window.location.reload();
+    });
+    window.addEventListener('load', async () => {
+      const registration = await navigator.serviceWorker.register('./sw.js');
+      registration.update();
+    });
+  }
 
   const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;

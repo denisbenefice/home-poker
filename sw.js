@@ -1,6 +1,6 @@
-const CACHE = 'home-poker-v14';
+const CACHE = 'home-poker-v15';
 const ASSETS = [
-  './', './index.html', './styles.css?v=14', './putty.css?v=14', './app.js?v=14', './manifest.webmanifest',
+  './', './index.html', './styles.css?v=15', './putty.css?v=15', './app.js?v=15', './manifest.webmanifest',
   './icon.svg', './icon-192.png', './icon-512.png',
   './icons/lucide/play.svg', './icons/lucide/pause.svg',
   './icons/lucide/skip-back.svg', './icons/lucide/skip-forward.svg',
@@ -13,5 +13,24 @@ self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).t
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); return response; }).catch(() => caches.match('./index.html'))));
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put('./index.html', copy));
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+  event.respondWith(
+    caches.match(event.request)
+      .then(cached => cached || fetch(event.request).then(response => {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        return response;
+      }))
+  );
 });
