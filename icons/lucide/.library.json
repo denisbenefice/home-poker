@@ -1,0 +1,17 @@
+{
+  "library": "lucide",
+  "prefix": "lucide",
+  "source": "lucide-icons/lucide",
+  "installedAt": "2026-10-25",
+  "icons": [
+    "chevron-down",
+    "chevron-up",
+    "pause",
+    "play",
+    "plus",
+    "skip-back",
+    "skip-forward",
+    "spade",
+    "trash"
+  ]
+}
