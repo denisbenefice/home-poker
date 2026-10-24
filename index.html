@@ -11,8 +11,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=16">
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="putty.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
   <div class="app-shell ds">
@@ -30,8 +30,8 @@
     <main>
       <section id="screen-setup" class="screen active" aria-labelledby="setup-title">
         <div class="setup-card ds-card">
+          <h1 id="setup-title" class="ds-card-header ds-section-title">Игроки, стек</h1>
           <div class="ds-card-body setup-card-body">
-            <h1 id="setup-title" class="ds-section-title">Игроки, стек</h1>
             <div class="player-count-row">
               <label class="ds-field field"><span class="ds-label">Игроки</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
               <button id="increment-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
@@ -172,6 +172,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=16" defer></script>
+  <script src="app.js?v=17" defer></script>
 </body>
 </html>

@@ -49,8 +49,16 @@ button, input, select { font: inherit; }
 .form-grid.compact { margin: 0; }
 .field.full { grid-column: 1 / -1; }
 
+.setup-card > .ds-card-header,
+.section-details > .ds-card-header {
+  padding: 1.25rem;
+}
+.setup-card > .ds-card-body,
+.section-details > .ds-card-body {
+  padding: 0 1.25rem 1.25rem;
+}
 .setup-card-body { display: grid; gap: 1.5rem; }
-.setup-card-body .ds-section-title { margin: 0; }
+.setup-card > .ds-section-title { margin: 0; }
 .player-count-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 4.5rem;
