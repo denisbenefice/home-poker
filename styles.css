@@ -245,9 +245,8 @@ button, input, select { font: inherit; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: .75rem;
-  margin-bottom: 1rem;
 }
-.music-library { border-top: .0625rem solid var(--border); }
+.music-library { margin-top: 1rem; border-top: .0625rem solid var(--border); }
 .music-library:empty { display: none; }
 .music-row {
   display: grid;
