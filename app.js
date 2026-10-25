@@ -18,7 +18,7 @@
     'Участники и ребаи':'Players & rebuys', 'Завершить игру':'Finish game',
     'Добавить треки':'Add tracks', 'Предыдущий':'Previous', 'Громкость':'Volume',
     'Подсчёт результатов':'Cash-out', 'Сложите номиналы оставшихся фишек каждого игрока.':'Add up the value of each player’s remaining chips.',
-    'В банке':'In the pot', 'Выдано':'Issued',
+    'В банке':'In the pot', 'По номиналу':'Chip value',
     'Рассчитать переводы':'Calculate transfers', 'Вернуться к игре':'Back to game',
     'Кто кому переводит':'Who pays whom', 'Минимальный список переводов для закрытия расчётов.':'The shortest list of transfers to settle up.',
     'Новая игра':'New game', 'Номинал':'Denomination', 'Всего в наборе':'In the set',
