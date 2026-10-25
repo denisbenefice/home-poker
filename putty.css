@@ -283,6 +283,8 @@
 .ds .ds-btn-primary:active { box-shadow:var(--shadow-clay-primary-sm) }
 .ds .ds-btn-secondary { border-width:0; color:var(--secondary-foreground); background-image:linear-gradient(180deg,oklch(0.985 0.008 94),var(--secondary)); background-origin:border-box; background-repeat:no-repeat; box-shadow:var(--shadow-clay) }
 .ds .ds-btn-secondary:active { box-shadow:var(--shadow-clay-sm) }
+.ds .ds-btn-destructive { border-width:0; color:var(--destructive-foreground); background:var(--destructive); background-image:none; box-shadow:0 3px 6px -1px oklch(0.45 0.14 26 / 0.25),0 10px 20px -6px oklch(0.45 0.14 26 / 0.2); --ring:var(--destructive) }
+.ds .ds-btn-destructive:active { box-shadow:0 2px 4px -1px oklch(0.45 0.14 26 / 0.22) }
 .ds .ds-btn-outline { border-width:1px; border-color:var(--border); background-color:var(--card); color:var(--foreground); box-shadow:var(--shadow-clay-sm) }
 .ds .ds-btn-outline:hover { background-color:var(--accent); color:var(--accent-foreground) }
 .ds .ds-btn-ghost { background-color:transparent; color:var(--muted-foreground) }

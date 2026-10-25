@@ -11,8 +11,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=44">
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="putty.css?v=45">
+  <link rel="stylesheet" href="styles.css?v=45">
 </head>
 <body>
   <div class="app-shell ds">
@@ -124,14 +124,14 @@
             </div>
             <div class="action-grid">
               <button id="pause-game" class="ds-btn ds-btn-secondary" type="button">Пауза</button>
-              <button id="finish-early" class="ds-btn ds-btn-secondary" type="button">Завершить</button>
+              <button id="finish-early" class="ds-btn ds-btn-destructive" type="button">Завершить</button>
             </div>
           </div>
         </div>
         <h2 class="ds-section-title section-heading">Участники и ребаи</h2>
         <div class="ds-card"><div id="game-roster" class="ds-card-body list-card"></div></div>
         <p id="rebuy-note" class="ds-supporting rebuy-note"></p>
-        <button id="finish-game" class="ds-btn ds-btn-primary ds-btn-lg full-action" type="button" hidden>Завершить игру</button>
+        <button id="finish-game" class="ds-btn ds-btn-destructive ds-btn-lg full-action" type="button" hidden>Завершить игру</button>
 
         <section id="music-player" class="music-dock ds-card" aria-label="Фоновая музыка">
           <div class="music-dock-main ds-card-body">
@@ -178,6 +178,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=44" defer></script>
+  <script src="app.js?v=45" defer></script>
 </body>
 </html>
