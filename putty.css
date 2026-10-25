@@ -290,4 +290,7 @@
 .ds-input::file-selector-button, .ds-textarea::file-selector-button, .ds-select::file-selector-button { border-width:0; background-color:transparent; font-size:0.875rem;line-height:1.25rem; font-weight:500 }
 
 .app-shell.ds{color:var(--foreground,oklch(0.2 0 0));background:var(--background,oklch(1 0 0))}
+.ds-select-wrap { position:relative; display:block; width:100%; }
+.ds-select-wrap > .ds-select { appearance:none; -webkit-appearance:none; padding-right:2.5rem; cursor:pointer; }
+.ds-select-wrap > svg { position:absolute; right:.875rem; top:50%; width:1rem; height:1rem; transform:translateY(-50%); pointer-events:none; color:var(--foreground); }
 .app-shell.ds :where(h1,h2,h3,h4,h5,h6,p,strong,label,legend,li,dt,dd,small):not(.ds-supporting):not(.ds-card-desc):not(.ds-muted){color:inherit!important}

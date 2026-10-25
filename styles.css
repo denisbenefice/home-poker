@@ -45,7 +45,7 @@ button, input, select { font: inherit; }
 .brand { min-width: 0; font-size: 1.125rem; }
 .brand strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .header-actions { flex-direction: column; align-items: flex-end; }
-.language-switch { width: auto; min-width: 3.6rem; padding: .3rem .45rem; font-size: .75rem; font-weight: 700; }
+.language-select-wrap { width: 5rem; flex: none; }
 .setup-progress { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
 .progress-step { height: .35rem; border-radius: 999px; background: var(--muted); }
 .progress-step.active { background: var(--primary); }
