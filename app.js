@@ -14,7 +14,7 @@
     'Начать':'Continue', 'Кто играет?':'Who is playing?',
     'Каждому участнику будет выдан одинаковый стек по номиналу.':'Each player receives the same chip value.',
     'Запустить игру':'Start game', 'Назад к настройкам':'Back to setup',
-    'Текущие блайнды':'Current blinds', 'Завершить досрочно':'Finish early',
+    'Текущие блайнды':'Current blinds', 'Завершить':'Finish',
     'Участники и ребаи':'Players & rebuys', 'Завершить игру':'Finish game',
     'Добавить треки':'Add tracks', 'Предыдущий':'Previous', 'Громкость':'Volume',
     'Подсчёт результатов':'Cash-out', 'Сложите номиналы оставшихся фишек каждого игрока.':'Add up the value of each player’s remaining chips.',
