@@ -13,6 +13,11 @@ button, input, select { font: inherit; }
   box-shadow: 0 .15rem .4rem -.3rem oklch(0.5 0.04 70 / .22);
 }
 .ds .ds-card { box-shadow: none; }
+.ds .setup-card,
+.ds .section-details,
+.ds .blind-card,
+.ds .music-dock,
+.ds .screen > .ds-card { box-shadow: var(--shadow-clay-lg); }
 
 .app-shell {
   width: min(100%, 42.5rem);
