@@ -5,10 +5,12 @@ button, input, select { font: inherit; }
 [hidden] { display: none !important; }
 
 .ds .ds-btn-secondary {
-  box-shadow: none;
+  background-image: none;
+  background-color: var(--secondary);
+  box-shadow: 0 .35rem .8rem -.55rem oklch(0.5 0.04 70 / .28);
 }
 .ds .ds-btn-secondary:active {
-  box-shadow: none;
+  box-shadow: 0 .15rem .4rem -.3rem oklch(0.5 0.04 70 / .22);
 }
 .ds .ds-card { box-shadow: none; }
 
