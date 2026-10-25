@@ -38,7 +38,7 @@
     'Все игроки вышли в ноль — переводов нет.':'Everyone broke even — no transfers needed.',
     'Завершить игру и перейти к расчёту?':'Finish the game and go to cash-out?',
     'На iPhone нажмите «Поделиться», затем «На экран Домой». После первой загрузки приложение будет работать без интернета.':'On iPhone, tap Share, then Add to Home Screen. After the first load, the app works offline.',
-    'Прогресс настройки':'Setup progress', 'Язык интерфейса':'Interface language', 'Добавить игрока':'Add player',
+    'Прогресс настройки':'Setup progress', 'Язык интерфейса':'Interface language', 'Добавить игрока':'Add player', 'Убрать игрока':'Remove player',
     'Удалить номинал':'Remove denomination', 'Фоновая музыка':'Background music', 'Воспроизвести':'Play',
     'Следующий трек':'Next track', 'Показать плейлист':'Show playlist', 'Скрыть плейлист':'Hide playlist',
     'Удалить трек':'Remove track'
@@ -247,6 +247,11 @@
   const number = value => new Intl.NumberFormat(language === 'en' ? 'en-US' : 'ru-RU', { maximumFractionDigits: 2 }).format(value);
   const money = value => number(value) + ' ₽';
   const inputNumber = id => Number($(id).value) || 0;
+  function updatePlayerCountButtons() {
+    const count = inputNumber('players-count');
+    $('decrement-players').disabled = count <= 2;
+    $('increment-players').disabled = count >= 12;
+  }
 
   function showScreen(name) {
     state.screen = name;
@@ -264,7 +269,7 @@
     $('rounds-enabled').checked = s.roundsEnabled; $('round-count').value = s.rounds; $('round-minutes').value = s.minutes;
     $('rebuy-enabled').checked = s.rebuyEnabled; $('rebuy-round').value = s.rebuyRound;
     $('blinds-enabled').checked = s.blindsEnabled; $('small-blind').value = s.smallBlind; $('big-blind').value = s.bigBlind; $('blind-growth').value = String(s.growth);
-    toggleSettings(); renderInventory();
+    toggleSettings(); renderInventory(); updatePlayerCountButtons();
   }
   function readSetup() {
     state.setup = {
@@ -273,7 +278,7 @@
       rebuyEnabled: $('rebuy-enabled').checked, rebuyRound: Math.floor(inputNumber('rebuy-round')),
       blindsEnabled: $('blinds-enabled').checked, smallBlind: inputNumber('small-blind'), bigBlind: inputNumber('big-blind'), growth: Number($('blind-growth').value)
     };
-    saveState(); renderChipPlan();
+    saveState(); renderChipPlan(); updatePlayerCountButtons();
   }
   function toggleSettings() {
     $('round-settings').hidden = !$('rounds-enabled').checked;
@@ -443,10 +448,12 @@
   }
 
   $('add-chip').addEventListener('click', () => { state.inventory.push({ denomination: 25, count: 20 }); saveState(); renderInventory(); });
-  $('increment-players').addEventListener('click', () => {
-    $('players-count').value = Math.min(12, Math.max(2, Math.floor(inputNumber('players-count')) + 1));
+  function changePlayerCount(delta) {
+    $('players-count').value = Math.min(12, Math.max(2, Math.floor(inputNumber('players-count')) + delta));
     readSetup();
-  });
+  }
+  $('decrement-players').addEventListener('click', () => changePlayerCount(-1));
+  $('increment-players').addEventListener('click', () => changePlayerCount(1));
   ['players-count','start-stack','buy-in','round-count','round-minutes','rebuy-round','small-blind','big-blind','blind-growth'].forEach(id => $(id).addEventListener('input', readSetup));
   ['rounds-enabled','rebuy-enabled','blinds-enabled'].forEach(id => $(id).addEventListener('change', () => { toggleSettings(); readSetup(); }));
   $('continue').addEventListener('click', preparePlayers); $('start-game').addEventListener('click', startGame); $('pause-game').addEventListener('click', togglePause);

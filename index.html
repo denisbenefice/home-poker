@@ -11,8 +11,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=30">
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="putty.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <div class="app-shell ds">
@@ -36,7 +36,10 @@
           <div class="ds-card-body setup-card-body">
             <div class="player-count-row">
               <label class="ds-field field"><span class="ds-label">Игроки</span><input id="players-count" class="ds-input" type="number" inputmode="numeric" min="2" max="12" value="4"></label>
-              <button id="increment-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
+              <div class="player-count-actions">
+                <button id="decrement-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Убрать игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /></svg></button>
+                <button id="increment-players" class="ds-btn ds-btn-secondary" type="button" aria-label="Добавить игрока"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button>
+              </div>
             </div>
             <div class="form-grid">
               <label class="ds-field field"><span class="ds-label">Бай-ин, ₽</span><input id="buy-in" class="ds-input" type="number" inputmode="decimal" min="1" value="1000"></label>
@@ -174,6 +177,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=30" defer></script>
+  <script src="app.js?v=31" defer></script>
 </body>
 </html>

@@ -81,12 +81,13 @@ button, input, select { font: inherit; }
 .setup-card > .ds-section-title { margin: 0; }
 .player-count-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 4.5rem;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: .75rem;
   align-items: end;
 }
 .player-count-row .ds-field { margin: 0; }
-.player-count-row .ds-btn { inline-size: 100%; }
+.player-count-actions { display: flex; gap: .5rem; }
+.player-count-row .ds-btn { inline-size: 2.75rem; padding-inline: 0; }
 .player-count-row .ds-btn svg { inline-size: 1.375rem; block-size: 1.375rem; }
 .section-details { margin-top: 2rem; }
 .section-details summary {
