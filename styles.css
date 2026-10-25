@@ -256,7 +256,7 @@ button, input, select { font: inherit; }
   padding: .75rem 0;
   border-bottom: .0625rem solid var(--border);
 }
-.music-row:last-child { border-bottom: 0; }
+.music-row:last-child { padding-bottom: 0; border-bottom: 0; }
 .music-select { justify-content: flex-start; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 @media (max-width: 380px) {
