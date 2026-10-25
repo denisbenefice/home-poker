@@ -1,6 +1,6 @@
-const CACHE = 'home-poker-v26';
+const CACHE = 'home-poker-v27';
 const ASSETS = [
-  './', './index.html', './styles.css?v=26', './putty.css?v=26', './app.js?v=26', './manifest.webmanifest',
+  './', './index.html', './styles.css?v=27', './putty.css?v=27', './app.js?v=27', './manifest.webmanifest',
   './icon.svg', './icon-192.png', './icon-512.png',
   './icons/lucide/play.svg', './icons/lucide/pause.svg',
   './icons/lucide/skip-back.svg', './icons/lucide/skip-forward.svg',
