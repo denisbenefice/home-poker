@@ -463,7 +463,6 @@
   $('music-previous').addEventListener('click', () => changeMusicTrack(-1));
   $('music-next').addEventListener('click', () => changeMusicTrack(1));
   $('music-expand').addEventListener('click', toggleMusicDetails);
-  $('music-volume').addEventListener('input', event => { musicAudio.volume = Number(event.target.value); });
   musicAudio.addEventListener('play', renderMusicPlayer); musicAudio.addEventListener('pause', renderMusicPlayer); musicAudio.addEventListener('ended', () => changeMusicTrack(1));
   if ('mediaSession' in navigator) {
     [['play', () => musicAudio.play()], ['pause', () => musicAudio.pause()], ['previoustrack', () => changeMusicTrack(-1)], ['nexttrack', () => changeMusicTrack(1)]].forEach(([action, handler]) => {

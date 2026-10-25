@@ -247,9 +247,7 @@ button, input, select { font: inherit; }
   gap: .75rem;
   margin-bottom: 1rem;
 }
-.volume-control { margin: 0; }
-.volume-control input { width: 100%; min-height: 1.75rem; accent-color: var(--primary); }
-.music-library { margin-top: 1rem; border-top: .0625rem solid var(--border); }
+.music-library { border-top: .0625rem solid var(--border); }
 .music-library:empty { display: none; }
 .music-row {
   display: grid;
