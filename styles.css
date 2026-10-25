@@ -7,7 +7,6 @@ button, input, select { font: inherit; }
 .ds .ds-card { box-shadow: none; }
 .ds .setup-card,
 .ds .section-details,
-.ds .blind-card,
 .ds .music-dock,
 .ds .screen > .ds-card { box-shadow: var(--shadow-clay-lg); }
 
@@ -162,18 +161,17 @@ button, input, select { font: inherit; }
   display: grid;
   gap: .5rem;
   justify-items: center;
-  padding-top: .75rem;
   text-align: center;
 }
 .timer { font-size: clamp(3rem, 17vw, 4.75rem) !important; font-variant-numeric: tabular-nums; }
-.blind-card { margin-top: 1.5rem; }
-.blind-panel { display: grid; gap: .25rem; padding: 1.25rem; text-align: center; }
+.game-controls-body { display: grid; gap: 1.25rem; }
+.blind-panel { display: grid; gap: .25rem; padding: 1.125rem 0; text-align: center; border-block: 1px solid var(--border); }
 .blind-value { font-size: 1.875rem; }
 .action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: .75rem;
-  margin-top: .75rem;
+  margin-top: 0;
 }
 .action-grid #pause-game[hidden] + #finish-early {
   width: min(100%, 18.75rem);

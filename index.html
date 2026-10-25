@@ -11,8 +11,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=39">
-  <link rel="stylesheet" href="styles.css?v=39">
+  <link rel="stylesheet" href="putty.css?v=40">
+  <link rel="stylesheet" href="styles.css?v=40">
 </head>
 <body>
   <div class="app-shell ds">
@@ -111,20 +111,22 @@
       </section>
 
       <section id="screen-game" class="screen" aria-labelledby="game-title">
-        <div class="game-clock">
-          <p id="round-label" class="ds-supporting">Раунд 1 из 6</p>
-          <h1 id="game-title" class="ds-display timer">20:00</h1>
-          <p id="timer-caption" class="ds-supporting">до следующего раунда</p>
-        </div>
-        <div class="blind-card ds-card">
-          <div class="blind-panel ds-card-body">
-            <span class="ds-supporting">Текущие блайнды</span>
-            <strong id="blind-value" class="blind-value">10 / 20</strong>
+        <div class="game-controls-card ds-card">
+          <div class="game-controls-body ds-card-body">
+            <div class="game-clock">
+              <p id="round-label" class="ds-supporting">Раунд 1 из 6</p>
+              <h1 id="game-title" class="ds-display timer">20:00</h1>
+              <p id="timer-caption" class="ds-supporting">до следующего раунда</p>
+            </div>
+            <div class="blind-panel">
+              <span class="ds-supporting">Текущие блайнды</span>
+              <strong id="blind-value" class="blind-value">10 / 20</strong>
+            </div>
+            <div class="action-grid">
+              <button id="pause-game" class="ds-btn ds-btn-secondary" type="button">Пауза</button>
+              <button id="finish-early" class="ds-btn ds-btn-secondary" type="button">Завершить</button>
+            </div>
           </div>
-        </div>
-        <div class="action-grid">
-          <button id="pause-game" class="ds-btn ds-btn-secondary" type="button">Пауза</button>
-          <button id="finish-early" class="ds-btn ds-btn-secondary" type="button">Завершить</button>
         </div>
         <h2 class="ds-section-title section-heading">Участники и ребаи</h2>
         <div class="ds-card"><div id="game-roster" class="ds-card-body list-card"></div></div>
@@ -177,6 +179,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=39" defer></script>
+  <script src="app.js?v=40" defer></script>
 </body>
 </html>
