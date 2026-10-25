@@ -27,23 +27,26 @@ button, input, select { font: inherit; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: .75rem;
-  align-items: center;
+  align-items: start;
   padding: max(1rem, env(safe-area-inset-top)) 1.5rem 1rem;
   background: color-mix(in oklab, var(--background) 94%, transparent);
   border-bottom: .0625rem solid var(--border);
   backdrop-filter: blur(1rem);
 }
 
-.brand, .header-actions {
+.header-info { min-width: 0; display: grid; gap: .75rem; }
+.header-heading, .brand, .header-actions {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: .5rem;
 }
+.header-heading { min-width: 0; }
+.header-heading .ds-badge { flex: none; }
 .brand { min-width: 0; font-size: 1.125rem; }
 .brand strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.header-actions { justify-content: flex-end; }
+.header-actions { flex-direction: column; align-items: flex-end; }
 .language-switch { width: auto; min-width: 3.6rem; padding: .3rem .45rem; font-size: .75rem; font-weight: 700; }
-.setup-progress { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+.setup-progress { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
 .progress-step { height: .35rem; border-radius: 999px; background: var(--muted); }
 .progress-step.active { background: var(--primary); }
 

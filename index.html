@@ -11,20 +11,21 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=27">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="putty.css?v=28">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <div class="app-shell ds">
     <header class="app-header">
-      <div class="brand"><strong>Домашний покер</strong></div>
-      <div class="header-actions">
-        <button id="install-app" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" hidden>Установить</button>
-        <span class="ds-badge">Кэш</span>
-        <select id="language-switch" class="language-switch ds-select" aria-label="Язык интерфейса"><option value="ru">RU</option><option value="en">EN</option></select>
+      <div class="header-info">
+        <div class="header-heading"><div class="brand"><strong>Домашний покер</strong></div><span class="ds-badge">Кэш</span></div>
+        <div id="setup-progress" class="setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+          <span class="progress-step active"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span>
+        </div>
       </div>
-      <div id="setup-progress" class="setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
-        <span class="progress-step active"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span>
+      <div class="header-actions">
+        <select id="language-switch" class="language-switch ds-select" aria-label="Язык интерфейса"><option value="ru">RU</option><option value="en">EN</option></select>
+        <button id="install-app" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" hidden>Установить</button>
       </div>
     </header>
 
@@ -173,6 +174,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=27" defer></script>
+  <script src="app.js?v=28" defer></script>
 </body>
 </html>
