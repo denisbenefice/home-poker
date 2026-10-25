@@ -41,9 +41,11 @@ button, input, select { font: inherit; }
 }
 .brand { min-width: 0; font-size: 1.125rem; }
 .brand strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.brand-mark { display: block; flex: none; block-size: 1cap; inline-size: auto; }
 .header-actions { justify-content: flex-end; }
-.setup-progress { grid-column: 1 / -1; }
+.language-switch { width: auto; min-width: 3.6rem; padding: .3rem .45rem; font-size: .75rem; font-weight: 700; }
+.setup-progress { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+.progress-step { height: .35rem; border-radius: 999px; background: var(--muted); }
+.progress-step.active { background: var(--primary); }
 
 .screen { display: none; padding: 2rem 1.5rem max(2rem, env(safe-area-inset-bottom)); }
 .screen.active { display: block; }

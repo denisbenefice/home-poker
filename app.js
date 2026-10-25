@@ -1,8 +1,78 @@
 (() => {
   'use strict';
   const STORAGE_KEY = 'home-poker-cash-v1';
+  const LANGUAGE_KEY = 'home-poker-language';
   const $ = id => document.getElementById(id);
   const screens = ['setup', 'players', 'game', 'cashout', 'settlement'];
+  const en = {
+    'Домашний покер':'Home Poker', 'Установить':'Install', 'Кэш':'Cash',
+    'Игроки, стек':'Players & stack', 'Игроки':'Players', 'Бай-ин, ₽':'Buy-in, ₽', 'Стек':'Stack',
+    'Калькулятор':'Chip calculator', 'Добавить':'Add', 'Дополнительно':'Advanced settings',
+    'Раунды и таймер':'Rounds & timer', 'Раундов':'Rounds', 'Длительность, мин':'Duration, min',
+    'Дедлайн ребаев':'Rebuy deadline', 'До конца раунда':'Until round ends', 'Рост блайндов':'Blind growth',
+    'Малый блайнд':'Small blind', 'Большой блайнд':'Big blind', 'Рост за раунд':'Growth per round', 'Без роста':'No increase',
+    'Начать':'Continue', 'Кто играет?':'Who is playing?',
+    'Каждому участнику будет выдан одинаковый стек по номиналу.':'Each player receives the same chip value.',
+    'Запустить игру':'Start game', 'Назад к настройкам':'Back to setup',
+    'Текущие блайнды':'Current blinds', 'Завершить досрочно':'Finish early',
+    'Участники и ребаи':'Players & rebuys', 'Завершить игру':'Finish game',
+    'Добавить треки':'Add tracks', 'Предыдущий':'Previous', 'Громкость':'Volume',
+    'Подсчёт результатов':'Cash-out', 'Сложите номиналы оставшихся фишек каждого игрока.':'Add up the value of each player’s remaining chips.',
+    'В банке':'In the pot', 'Выдано по номиналу':'Chips issued by value',
+    'Рассчитать переводы':'Calculate transfers', 'Вернуться к игре':'Back to game',
+    'Кто кому переводит':'Who pays whom', 'Минимальный список переводов для закрытия расчётов.':'The shortest list of transfers to settle up.',
+    'Новая игра':'New game', 'Номинал':'Denomination', 'Всего в наборе':'In the set',
+    'Одному':'Per player', 'Раздать':'Deal', 'Количество':'Quantity',
+    'Стек собран':'Exact stack', 'Ближайший вариант':'Closest match',
+    'Раунд':'Round', 'до следующего раунда':'until next round', 'время игры завершено':'Game time is up',
+    'Игра без таймера':'Game without timer', 'таймер отключён':'Timer is off', 'Без блайндов':'No blinds',
+    'Пауза':'Pause', 'Продолжить':'Resume', 'Ребай':'Rebuy',
+    'Музыка не добавлена':'No music added', 'Добавьте MP3 или M4A':'Add MP3 or M4A',
+    'Добавьте MP3 или M4A — треки сохранятся на телефоне.':'Add MP3 or M4A — tracks are saved on this device.',
+    'Не удалось открыть хранилище музыки.':'Could not open music storage.',
+    'Сохраняем музыку…':'Saving music…', 'Не удалось сохранить треки. Проверьте свободное место.':'Could not save tracks. Check available space.',
+    'Добавьте доступные фишки, чтобы получить расклад.':'Add your chips to get a distribution.',
+    'Из этого набора нельзя собрать заданный стек.':'This set cannot make the requested stack.',
+    'Проверьте количество игроков, стек, стоимость входа и параметры раундов.':'Check player count, stack, buy-in, and round settings.',
+    'Дедлайн ребаев прошёл.':'The rebuy deadline has passed.', 'Ребаи доступны всю игру.':'Rebuys are available throughout the game.',
+    'Все игроки вышли в ноль — переводов нет.':'Everyone broke even — no transfers needed.',
+    'Завершить игру и перейти к расчёту?':'Finish the game and go to cash-out?',
+    'На iPhone нажмите «Поделиться», затем «На экран Домой». После первой загрузки приложение будет работать без интернета.':'On iPhone, tap Share, then Add to Home Screen. After the first load, the app works offline.',
+    'Прогресс настройки':'Setup progress', 'Язык интерфейса':'Interface language', 'Добавить игрока':'Add player',
+    'Удалить номинал':'Remove denomination', 'Фоновая музыка':'Background music', 'Воспроизвести':'Play',
+    'Следующий трек':'Next track', 'Показать плейлист':'Show playlist', 'Скрыть плейлист':'Hide playlist',
+    'Удалить трек':'Remove track'
+  };
+  let language = localStorage.getItem(LANGUAGE_KEY) === 'en' ? 'en' : 'ru';
+  const tr = text => language === 'en' ? (en[text] || text) : text;
+  const phrase = (ru, english) => language === 'en' ? english : ru;
+  const staticTexts = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (en[node.textContent.trim()]) staticTexts.push({ node, original: node.textContent });
+  }
+  const staticLabels = [...document.querySelectorAll('[aria-label]')].map(element => ({ element, original: element.getAttribute('aria-label') }));
+  function applyLanguage() {
+    if (state.screen === 'cashout') document.querySelectorAll('.cashout-input').forEach(input => { state.players[Number(input.dataset.player)].cashout = Number(input.value) || 0; });
+    document.documentElement.lang = language;
+    document.title = tr('Домашний покер');
+    $('language-switch').value = language;
+    staticTexts.forEach(({ node, original }) => { if (node.isConnected) node.textContent = original.replace(original.trim(), tr(original.trim())); });
+    staticLabels.forEach(({ element, original }) => { if (element.isConnected) element.setAttribute('aria-label', tr(original)); });
+    state.players.forEach((player, index) => {
+      if (player.name === `Игрок ${index + 1}` || player.name === `Player ${index + 1}`) player.name = phrase(`Игрок ${index + 1}`, `Player ${index + 1}`);
+    });
+    renderInventory();
+    if (state.screen === 'players') renderPlayerInputs();
+    if (state.screen === 'game') renderGame();
+    if (state.screen === 'cashout') renderCashout();
+    if (state.screen === 'settlement') renderTransfers();
+    renderMusicPlayer();
+    $('setup-error').textContent = '';
+    $('cashout-error').textContent = '';
+    saveState();
+  }
   const defaults = {
     screen: 'setup',
     setup: { players: 4, stack: 1000, buyIn: 1000, roundsEnabled: true, rounds: 6, minutes: 20, rebuyEnabled: true, rebuyRound: 3, blindsEnabled: true, smallBlind: 10, bigBlind: 20, growth: 2 },
@@ -56,7 +126,7 @@
       musicTracks = (await musicStore('readonly', store => store.getAll())).sort((a, b) => a.addedAt - b.addedAt);
       currentTrackIndex = Math.min(currentTrackIndex, Math.max(0, musicTracks.length - 1));
       renderMusicPlayer();
-    } catch (_) { $('music-status').textContent = 'Не удалось открыть хранилище музыки.'; }
+    } catch (_) { $('music-status').textContent = tr('Не удалось открыть хранилище музыки.'); }
   }
 
   function setMusicTrack(index, autoplay = false) {
@@ -84,20 +154,20 @@
 
   function updateMediaSession() {
     if (!('mediaSession' in navigator) || !musicTracks.length || !('MediaMetadata' in window)) return;
-    navigator.mediaSession.metadata = new MediaMetadata({ title: musicTracks[currentTrackIndex].name, artist: 'Домашний покер' });
+    navigator.mediaSession.metadata = new MediaMetadata({ title: musicTracks[currentTrackIndex].name, artist: tr('Домашний покер') });
   }
 
   function renderMusicPlayer() {
     const hasTracks = musicTracks.length > 0;
     $('music-player').classList.toggle('empty', !hasTracks);
-    $('music-status').textContent = hasTracks ? `${musicTracks.length} ${musicTracks.length === 1 ? 'трек сохранён' : 'треков сохранено'} офлайн` : 'Добавьте MP3 или M4A — треки сохранятся на телефоне.';
+    $('music-status').textContent = hasTracks ? phrase(`${musicTracks.length} ${musicTracks.length === 1 ? 'трек сохранён' : 'треков сохранено'} офлайн`, `${musicTracks.length} ${musicTracks.length === 1 ? 'track' : 'tracks'} saved offline`) : tr('Добавьте MP3 или M4A — треки сохранятся на телефоне.');
     $('music-next').disabled = !hasTracks;
     $('music-previous').disabled = !hasTracks;
-    if (!hasTracks) { $('music-track-name').textContent = 'Музыка не добавлена'; $('music-library').innerHTML = ''; return; }
+    if (!hasTracks) { $('music-track-name').textContent = tr('Музыка не добавлена'); $('music-library').innerHTML = ''; return; }
     $('music-track-name').textContent = musicTracks[currentTrackIndex].name;
     $('music-toggle').innerHTML = musicAudio.paused ? icons.play : icons.pause;
-    $('music-toggle').setAttribute('aria-label', musicAudio.paused ? 'Воспроизвести' : 'Пауза');
-    $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row"><button class="music-select ds-btn ds-btn-ghost" type="button" data-index="${index}" aria-pressed="${index === currentTrackIndex}">${escapeHtml(track.name)}</button><button class="music-remove ds-btn ds-btn-ghost ds-btn-sm" type="button" data-remove="${track.id}" aria-label="Удалить трек">${icons.trash}</button></div>`).join('');
+    $('music-toggle').setAttribute('aria-label', tr(musicAudio.paused ? 'Воспроизвести' : 'Пауза'));
+    $('music-library').innerHTML = musicTracks.map((track, index) => `<div class="music-row"><button class="music-select ds-btn ds-btn-ghost" type="button" data-index="${index}" aria-pressed="${index === currentTrackIndex}">${escapeHtml(track.name)}</button><button class="music-remove ds-btn ds-btn-ghost ds-btn-sm" type="button" data-remove="${track.id}" aria-label="${tr('Удалить трек')}">${icons.trash}</button></div>`).join('');
     document.querySelectorAll('.music-select').forEach(button => button.addEventListener('click', () => setMusicTrack(Number(button.dataset.index), true)));
     document.querySelectorAll('.music-remove').forEach(button => button.addEventListener('click', () => removeMusicTrack(button.dataset.remove)));
   }
@@ -108,13 +178,13 @@
     details.hidden = !willExpand;
     $('music-expand').innerHTML = willExpand ? icons.caretDown : icons.caretUp;
     $('music-expand').setAttribute('aria-expanded', String(willExpand));
-    $('music-expand').setAttribute('aria-label', willExpand ? 'Скрыть плейлист' : 'Показать плейлист');
+    $('music-expand').setAttribute('aria-label', tr(willExpand ? 'Скрыть плейлист' : 'Показать плейлист'));
   }
 
   async function importMusic(files) {
     const audioFiles = [...files].filter(file => file.type.startsWith('audio/') || /\.(mp3|m4a)$/i.test(file.name));
     if (!audioFiles.length) return;
-    $('music-status').textContent = 'Сохраняем музыку…';
+    $('music-status').textContent = tr('Сохраняем музыку…');
     try {
       for (const file of audioFiles) {
         const track = { id: `${Date.now()}-${crypto.randomUUID ? crypto.randomUUID() : Math.random()}`, name: file.name.replace(/\.[^.]+$/, ''), type: file.type, blob: file, addedAt: Date.now() };
@@ -122,7 +192,7 @@
       }
       await loadMusicLibrary();
       if (!musicAudio.src) setMusicTrack(0);
-    } catch (_) { $('music-status').textContent = 'Не удалось сохранить треки. Проверьте свободное место.'; }
+    } catch (_) { $('music-status').textContent = tr('Не удалось сохранить треки. Проверьте свободное место.'); }
     $('music-files').value = '';
   }
 
@@ -174,7 +244,7 @@
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
-  const number = value => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value);
+  const number = value => new Intl.NumberFormat(language === 'en' ? 'en-US' : 'ru-RU', { maximumFractionDigits: 2 }).format(value);
   const money = value => number(value) + ' ₽';
   const inputNumber = id => Number($(id).value) || 0;
 
@@ -183,7 +253,7 @@
     screens.forEach(screen => $('screen-' + screen).classList.toggle('active', screen === name));
     const progress = screens.indexOf(name) + 1;
     $('setup-progress').setAttribute('aria-valuenow', String(progress));
-    $('setup-progress').querySelector('.ds-progress-bar').style.width = `${progress * 20}%`;
+    $('setup-progress').querySelectorAll('.progress-step').forEach((step, index) => step.classList.toggle('active', index < progress));
     window.scrollTo({ top: 0, behavior: 'smooth' });
     saveState();
   }
@@ -216,7 +286,7 @@
     $('chip-list').innerHTML = '';
     state.inventory.forEach((chip, index) => {
       const row = document.createElement('div'); row.className = 'chip-row';
-      row.innerHTML = `<label class="field ds-field"><span class="ds-label">Номинал</span><input class="chip-denomination ds-input" type="number" inputmode="numeric" min="1" value="${chip.denomination}"></label><label class="field ds-field"><span class="ds-label">Всего в наборе</span><input class="chip-count ds-input" type="number" inputmode="numeric" min="0" value="${chip.count}"></label><button class="remove-button ds-btn ds-btn-ghost ds-btn-sm" type="button" aria-label="Удалить номинал">${icons.trash}</button>`;
+      row.innerHTML = `<label class="field ds-field"><span class="ds-label">${tr('Номинал')}</span><input class="chip-denomination ds-input" type="number" inputmode="numeric" min="1" value="${chip.denomination}"></label><label class="field ds-field"><span class="ds-label">${tr('Всего в наборе')}</span><input class="chip-count ds-input" type="number" inputmode="numeric" min="0" value="${chip.count}"></label><button class="remove-button ds-btn ds-btn-ghost ds-btn-sm" type="button" aria-label="${tr('Удалить номинал')}">${icons.trash}</button>`;
       row.querySelector('.chip-denomination').addEventListener('input', event => { state.inventory[index].denomination = Number(event.target.value) || 0; saveState(); renderChipPlan(); });
       row.querySelector('.chip-count').addEventListener('input', event => { state.inventory[index].count = Math.floor(Number(event.target.value) || 0); saveState(); renderChipPlan(); });
       row.querySelector('button').addEventListener('click', () => { state.inventory.splice(index, 1); saveState(); renderInventory(); });
@@ -234,7 +304,7 @@
     const target = Math.max(0, inputNumber('start-stack') || state.setup.stack);
     const bigBlind = Math.max(1, inputNumber('big-blind') || state.setup.bigBlind);
     const denominations = state.inventory.map(chip => ({ denomination: chip.denomination, total: chip.count, perPlayer: Math.floor(chip.count / players) })).filter(chip => chip.denomination > 0 && chip.perPlayer > 0).sort((a, b) => a.denomination - b.denomination);
-    if (!target || !denominations.length) { $('chip-result').textContent = 'Добавьте доступные фишки, чтобы получить расклад.'; return; }
+    if (!target || !denominations.length) { $('chip-result').textContent = tr('Добавьте доступные фишки, чтобы получить расклад.'); return; }
     let dp = new Array(target + 1).fill(null); dp[0] = { picks: [], score: 0 };
     denominations.forEach((chip, index) => {
       const next = new Array(target + 1).fill(null);
@@ -248,29 +318,32 @@
       dp = next;
     });
     let best = target; while (best > 0 && !dp[best]) best--;
-    if (!best) { $('chip-result').textContent = 'Из этого набора нельзя собрать заданный стек.'; return; }
+    if (!best) { $('chip-result').textContent = tr('Из этого набора нельзя собрать заданный стек.'); return; }
     const used = denominations.map((chip, index) => ({ ...chip, each: dp[best].picks[index] || 0 })).filter(chip => chip.each > 0);
     const eachCount = used.reduce((sum, chip) => sum + chip.each, 0);
     const totalCount = eachCount * players;
     const leftovers = state.inventory.reduce((sum, chip) => sum + chip.count, 0) - totalCount;
-    const rows = used.map(chip => `<tr><td>${number(chip.denomination)}</td><td>${chip.each} шт.</td><td>${chip.each * players} шт.</td></tr>`).join('');
-    $('chip-result').innerHTML = `<div class="calculation-header"><strong>Расклад на ${players} игроков</strong><span class="ds-badge ${best === target ? 'ds-badge-safe' : 'ds-badge-warn'}">${best === target ? 'Стек собран' : 'Ближайший вариант'}</span></div><table class="chip-table ds-table"><thead><tr><th>Номинал</th><th>Одному</th><th>Раздать</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>Количество</td><td>${eachCount} шт.</td><td>${totalCount} шт.</td></tr></tfoot></table><strong>Стек игрока по номиналу: ${number(best)}</strong><br><span class="ds-supporting">В наборе останется ${leftovers} фишек.${best === target ? ' Мелкие номиналы добавлены для оплаты блайндов.' : ` По номиналу не хватает ${number(target - best)}.`}</span>`;
+    const chipUnit = count => language === 'en' ? (count === 1 ? 'chip' : 'chips') : 'шт.';
+    const rows = used.map(chip => `<tr><td>${number(chip.denomination)}</td><td>${chip.each} ${chipUnit(chip.each)}</td><td>${chip.each * players} ${chipUnit(chip.each * players)}</td></tr>`).join('');
+    const remaining = phrase(`В наборе останется ${leftovers} фишек.`, `${leftovers} chips remain in the set.`);
+    const extra = best === target ? phrase(' Мелкие номиналы добавлены для оплаты блайндов.', ' Small chips were included for paying blinds.') : phrase(` По номиналу не хватает ${number(target - best)}.`, ` The stack is short by ${number(target - best)} in chip value.`);
+    $('chip-result').innerHTML = `<div class="calculation-header"><strong>${phrase(`Расклад на ${players} игроков`, `Distribution for ${players} players`)}</strong><span class="ds-badge ${best === target ? 'ds-badge-safe' : 'ds-badge-warn'}">${tr(best === target ? 'Стек собран' : 'Ближайший вариант')}</span></div><table class="chip-table ds-table"><thead><tr><th>${tr('Номинал')}</th><th>${tr('Одному')}</th><th>${tr('Раздать')}</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>${tr('Количество')}</td><td>${eachCount} ${chipUnit(eachCount)}</td><td>${totalCount} ${chipUnit(totalCount)}</td></tr></tfoot></table><strong>${phrase(`Стек игрока по номиналу: ${number(best)}`, `Player stack by chip value: ${number(best)}`)}</strong><br><span class="ds-supporting">${remaining}${extra}</span>`;
   }
 
   function preparePlayers() {
     readSetup();
     const s = state.setup;
     $('setup-error').textContent = '';
-    if (s.players < 2 || s.players > 12 || s.stack <= 0 || s.buyIn <= 0 || (s.roundsEnabled && (s.rounds < 1 || s.minutes <= 0))) { $('setup-error').textContent = 'Проверьте количество игроков, стек, стоимость входа и параметры раундов.'; return; }
+    if (s.players < 2 || s.players > 12 || s.stack <= 0 || s.buyIn <= 0 || (s.roundsEnabled && (s.rounds < 1 || s.minutes <= 0))) { $('setup-error').textContent = tr('Проверьте количество игроков, стек, стоимость входа и параметры раундов.'); return; }
     const old = state.players;
-    state.players = Array.from({ length: s.players }, (_, index) => old[index] || { name: `Игрок ${index + 1}`, rebuys: 0, cashout: s.stack });
+    state.players = Array.from({ length: s.players }, (_, index) => old[index] || { name: phrase(`Игрок ${index + 1}`, `Player ${index + 1}`), rebuys: 0, cashout: s.stack });
     renderPlayerInputs(); showScreen('players');
   }
   function renderPlayerInputs() {
     $('player-list').innerHTML = '';
     state.players.forEach((player, index) => {
       const row = document.createElement('label'); row.className = 'player-row';
-      row.innerHTML = `<span class="player-number ds-avatar">${index + 1}</span><input class="ds-input" type="text" maxlength="30" value="${escapeHtml(player.name)}" aria-label="Имя игрока ${index + 1}">`;
+      row.innerHTML = `<span class="player-number ds-avatar">${index + 1}</span><input class="ds-input" type="text" maxlength="30" value="${escapeHtml(player.name)}" aria-label="${phrase(`Имя игрока ${index + 1}`, `Player ${index + 1} name`)}">`;
       row.querySelector('input').addEventListener('input', event => { state.players[index].name = event.target.value; saveState(); });
       $('player-list').appendChild(row);
     });
@@ -283,7 +356,7 @@
       if (!musicAudio.src) setMusicTrack(currentTrackIndex);
       musicAudio.play().catch(() => {});
     }
-    state.players.forEach((player, index) => { player.name = player.name.trim() || `Игрок ${index + 1}`; player.rebuys = 0; player.cashout = state.setup.stack; });
+    state.players.forEach((player, index) => { player.name = player.name.trim() || phrase(`Игрок ${index + 1}`, `Player ${index + 1}`); player.rebuys = 0; player.cashout = state.setup.stack; });
     state.game = { round: 1, remaining: state.setup.roundsEnabled ? state.setup.minutes * 60 : 0, running: state.setup.roundsEnabled, endAt: state.setup.roundsEnabled ? Date.now() + state.setup.minutes * 60000 : null, finished: false };
     saveState(); renderGame(); showScreen('game'); startTimerLoop();
   }
@@ -311,18 +384,18 @@
   function renderGame() {
     const g = state.game, s = state.setup;
     if (s.roundsEnabled) {
-      $('round-label').textContent = `Раунд ${g.round} из ${s.rounds}`;
+      $('round-label').textContent = phrase(`Раунд ${g.round} из ${s.rounds}`, `Round ${g.round} of ${s.rounds}`);
       const minutes = Math.floor(g.remaining / 60), seconds = Math.floor(g.remaining % 60);
       $('game-title').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      $('timer-caption').textContent = g.finished ? 'время игры завершено' : 'до следующего раунда';
-    } else { $('round-label').textContent = 'Игра без таймера'; $('game-title').textContent = '∞'; $('timer-caption').textContent = 'таймер отключён'; }
-    const blinds = currentBlinds(); $('blind-value').textContent = blinds ? `${number(blinds[0])} / ${number(blinds[1])}` : 'Без блайндов';
-    $('pause-game').textContent = g.running ? 'Пауза' : 'Продолжить'; $('pause-game').hidden = !s.roundsEnabled || g.finished;
+      $('timer-caption').textContent = tr(g.finished ? 'время игры завершено' : 'до следующего раунда');
+    } else { $('round-label').textContent = tr('Игра без таймера'); $('game-title').textContent = '∞'; $('timer-caption').textContent = tr('таймер отключён'); }
+    const blinds = currentBlinds(); $('blind-value').textContent = blinds ? `${number(blinds[0])} / ${number(blinds[1])}` : tr('Без блайндов');
+    $('pause-game').textContent = tr(g.running ? 'Пауза' : 'Продолжить'); $('pause-game').hidden = !s.roundsEnabled || g.finished;
     $('finish-game').hidden = !g.finished;
     const rebuyAllowed = !g.finished && (!s.rebuyEnabled || g.round <= s.rebuyRound);
-    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Входов: ${player.rebuys + 1} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-secondary" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>${icons.plus}Ребай</button></div>`).join('');
+    $('game-roster').innerHTML = state.players.map((player, index) => `<div class="roster-row"><div><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">${phrase(`Входов: ${player.rebuys + 1}`, `Entries: ${player.rebuys + 1}`)} · ${money((player.rebuys + 1) * s.buyIn)}</small></div><button class="rebuy-button ds-btn ds-btn-secondary" data-player="${index}" type="button" ${rebuyAllowed ? '' : 'disabled'}>${icons.plus}${tr('Ребай')}</button></div>`).join('');
     document.querySelectorAll('.rebuy-button').forEach(button => button.addEventListener('click', () => { const index = Number(button.dataset.player); state.players[index].rebuys++; state.players[index].cashout += s.stack; saveState(); renderGame(); }));
-    $('rebuy-note').textContent = s.rebuyEnabled ? (rebuyAllowed ? `Ребаи доступны до конца раунда ${s.rebuyRound}.` : 'Дедлайн ребаев прошёл.') : 'Ребаи доступны всю игру.';
+    $('rebuy-note').textContent = s.rebuyEnabled ? (rebuyAllowed ? phrase(`Ребаи доступны до конца раунда ${s.rebuyRound}.`, `Rebuys are available through round ${s.rebuyRound}.`) : tr('Дедлайн ребаев прошёл.')) : tr('Ребаи доступны всю игру.');
   }
   function togglePause() {
     prepareAudio();
@@ -332,12 +405,15 @@
     saveState(); renderGame();
   }
 
-  function openCashout() {
-    syncTimer(); state.game.running = false; state.game.endAt = null; clearInterval(timerId); saveState();
+  function renderCashout() {
     const issued = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.stack, 0);
     const pot = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.buyIn, 0);
     $('pot-value').textContent = money(pot); $('issued-value').textContent = number(issued);
-    $('cashout-list').innerHTML = state.players.map((player, index) => `<label class="cashout-row"><span><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">Внёс ${money((player.rebuys + 1) * state.setup.buyIn)} · сумма номиналов справа</small></span><input class="cashout-input ds-input" data-player="${index}" type="number" inputmode="numeric" min="0" value="${player.cashout}" aria-label="Сумма номиналов у ${escapeHtml(player.name)}"></label>`).join('');
+    $('cashout-list').innerHTML = state.players.map((player, index) => `<label class="cashout-row"><span><strong>${escapeHtml(player.name)}</strong><small class="ds-supporting">${phrase(`Внёс ${money((player.rebuys + 1) * state.setup.buyIn)} · сумма номиналов справа`, `Paid ${money((player.rebuys + 1) * state.setup.buyIn)} · enter remaining chip value`)}</small></span><input class="cashout-input ds-input" data-player="${index}" type="number" inputmode="numeric" min="0" value="${player.cashout}" aria-label="${phrase(`Сумма номиналов у ${escapeHtml(player.name)}`, `Remaining chip value for ${escapeHtml(player.name)}`)}"></label>`).join('');
+  }
+  function openCashout() {
+    syncTimer(); state.game.running = false; state.game.endAt = null; clearInterval(timerId); saveState();
+    renderCashout();
     $('cashout-error').textContent = ''; showScreen('cashout');
   }
   function calculateTransfers() {
@@ -345,7 +421,7 @@
     inputs.forEach(input => { state.players[Number(input.dataset.player)].cashout = Number(input.value) || 0; });
     const issued = state.players.reduce((sum, player) => sum + (player.rebuys + 1) * state.setup.stack, 0);
     const actual = state.players.reduce((sum, player) => sum + player.cashout, 0);
-    if (Math.abs(actual - issued) > 0.001) { $('cashout-error').textContent = `Сумма номиналов должна быть ${number(issued)}. Сейчас указано ${number(actual)}.`; return; }
+    if (Math.abs(actual - issued) > 0.001) { $('cashout-error').textContent = phrase(`Сумма номиналов должна быть ${number(issued)}. Сейчас указано ${number(actual)}.`, `The remaining chip value must total ${number(issued)}. Current total: ${number(actual)}.`); return; }
     const balances = state.players.map(player => ({ name: player.name, cents: Math.round((player.cashout * state.setup.buyIn / state.setup.stack - (player.rebuys + 1) * state.setup.buyIn) * 100) }));
     const debtors = balances.filter(item => item.cents < 0).map(item => ({ ...item, cents: -item.cents }));
     const creditors = balances.filter(item => item.cents > 0).map(item => ({ ...item }));
@@ -359,7 +435,7 @@
     renderTransfers(); saveState(); showScreen('settlement');
   }
   function renderTransfers() {
-    $('transfers').innerHTML = state.transfers.length ? state.transfers.map(transfer => `<div class="transfer-row"><strong>${escapeHtml(transfer.from)}</strong><span class="arrow ds-muted">→</span><strong>${escapeHtml(transfer.to)}</strong><span class="amount ds-badge ds-badge-primary">${money(transfer.amount)}</span></div>`).join('') : '<div class="empty-result ds-supporting">Все игроки вышли в ноль — переводов нет.</div>';
+    $('transfers').innerHTML = state.transfers.length ? state.transfers.map(transfer => `<div class="transfer-row"><strong>${escapeHtml(transfer.from)}</strong><span class="arrow ds-muted">→</span><strong>${escapeHtml(transfer.to)}</strong><span class="amount ds-badge ds-badge-primary">${money(transfer.amount)}</span></div>`).join('') : `<div class="empty-result ds-supporting">${tr('Все игроки вышли в ноль — переводов нет.')}</div>`;
   }
   function newGame() {
     musicAudio.pause();
@@ -387,13 +463,13 @@
       try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) {}
     });
   }
-  $('finish-early').addEventListener('click', () => { if (confirm('Завершить игру и перейти к расчёту?')) openCashout(); });
+  $('finish-early').addEventListener('click', () => { if (confirm(tr('Завершить игру и перейти к расчёту?'))) openCashout(); });
   $('finish-game').addEventListener('click', openCashout); $('calculate-transfers').addEventListener('click', calculateTransfers); $('new-game').addEventListener('click', newGame);
   document.querySelectorAll('.back-button').forEach(button => button.addEventListener('click', () => { if (button.dataset.target === 'game') { renderGame(); startTimerLoop(); } showScreen(button.dataset.target); }));
   document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); else if (state.screen === 'game') startTimerLoop(); });
   window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; $('install-app').hidden = false; });
   $('install-app').addEventListener('click', async () => {
-    if (!installPrompt) { alert('На iPhone нажмите «Поделиться», затем «На экран Домой». После первой загрузки приложение будет работать без интернета.'); return; }
+    if (!installPrompt) { alert(tr('На iPhone нажмите «Поделиться», затем «На экран Домой». После первой загрузки приложение будет работать без интернета.')); return; }
     installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; $('install-app').hidden = true;
   });
   window.addEventListener('appinstalled', () => { $('install-app').hidden = true; });
@@ -414,6 +490,11 @@
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   if (isAppleMobile && !isStandalone) $('install-app').hidden = false;
 
+  $('language-switch').addEventListener('change', event => {
+    language = event.target.value === 'en' ? 'en' : 'ru';
+    localStorage.setItem(LANGUAGE_KEY, language);
+    applyLanguage();
+  });
   fillSetup();
   loadMusicLibrary();
   if (!screens.includes(state.screen)) state.screen = 'setup';
@@ -422,4 +503,5 @@
   if (state.screen === 'cashout') openCashout();
   if (state.screen === 'settlement') renderTransfers();
   showScreen(state.screen);
+  applyLanguage();
 })();

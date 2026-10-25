@@ -11,19 +11,20 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="putty.css?v=25">
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="putty.css?v=26">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <div class="app-shell ds">
     <header class="app-header">
-      <div class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18v4" /><path d="M2 14.499a5.5 5.5 0 0 0 9.591 3.675.6.6 0 0 1 .818.001A5.5 5.5 0 0 0 22 14.5c0-2.29-1.5-4-3-5.5l-5.492-5.312a2 2 0 0 0-3-.02L5 8.999c-1.5 1.5-3 3.2-3 5.5" /></svg><strong>Домашний покер</strong></div>
+      <div class="brand"><strong>Домашний покер</strong></div>
       <div class="header-actions">
         <button id="install-app" class="ds-btn ds-btn-secondary ds-btn-sm" type="button" hidden>Установить</button>
+        <select id="language-switch" class="language-switch ds-select" aria-label="Язык интерфейса"><option value="ru">RU</option><option value="en">EN</option></select>
         <span class="ds-badge">Кэш</span>
       </div>
-      <div id="setup-progress" class="ds-progress setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
-        <div class="ds-progress-bar" style="width:20%"></div>
+      <div id="setup-progress" class="setup-progress" role="progressbar" aria-label="Прогресс настройки" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+        <span class="progress-step active"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span><span class="progress-step"></span>
       </div>
     </header>
 
@@ -172,6 +173,6 @@
       </section>
     </main>
   </div>
-  <script src="app.js?v=25" defer></script>
+  <script src="app.js?v=26" defer></script>
 </body>
 </html>
